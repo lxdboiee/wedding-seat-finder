@@ -13,14 +13,13 @@ html, body {
 }
 
 body {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  min-height: 100vh;
-  overflow: hidden;
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  min-height:100vh;
+  overflow:hidden;
 
-  /* Background: image + white overlay */
+  /* Background image + semi-transparent overlay */
   background: 
     linear-gradient(rgba(255,255,255,0.85), rgba(255,255,255,0.85)),
     url("background.png") no-repeat center center fixed;
@@ -54,7 +53,14 @@ body {
   to{opacity:1; transform:none}
 }
 
-h1{font-size:24px; margin-bottom:8px}
+h1{
+  font-size:24px;
+  margin-bottom:8px;
+  line-height:1.3;
+  font-weight:600;
+  text-align:center;
+}
+
 .subtitle{color:#555; margin-bottom:20px}
 
 input{
@@ -154,7 +160,7 @@ input:focus{
 <div class="container">
   <div class="card">
     <h1 id="title"></h1>
-    <div class="subtitle">Find Your Table</div>
+    <div class="subtitle">Type your name below</div>
     <input id="search" placeholder="Start typing your name">
     <div id="results" class="results"></div>
   </div>
@@ -166,16 +172,24 @@ input:focus{
 </div>
 
 <script>
+// Couple info
 const couple = { first:"Charlie", second:"Jennifer", date:"26-09-26" };
-document.getElementById("title").textContent = `Welcome to ${couple.first} & ${couple.second}'s Wedding ${couple.date}`;
+// Multi-line title
+document.getElementById("title").innerHTML = `
+  <div>Welcome to</div>
+  <div>${couple.first} & ${couple.second}'s</div>
+  <div>Wedding ${couple.date}</div>
+`;
 
+// CSV source
 const CSV_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vRTHOySmu1LqBL9y25rwBHDflfv4TOwbmgUB8oJkxfMqQuSs9iEeYz29KoRQNyQYEcAoqZ2EPtPR7D3/pub?gid=0&single=true&output=csv";
 
 let guests=[];
 
-// normalize: lowercase, remove spaces
+// Normalize text: lowercase & remove spaces
 const normalize = s => s.toLowerCase().replace(/\s+/g,"");
 
+// Fetch CSV
 fetch(CSV_URL)
   .then(r => r.text())
   .then(text => {
@@ -183,13 +197,15 @@ fetch(CSV_URL)
     guests = rows.map(r=>{
       const [first,last,table,seat] = r.split(",");
       return {
+        first, last,
         name: first + " " + last,
-        table: table,
-        seat: seat
+        table, seat,
+        normalized: normalize(first + last)
       };
     });
   });
 
+// DOM references
 const input = document.getElementById("search");
 const resultsDiv = document.getElementById("results");
 const popup = document.getElementById("popup");
@@ -201,10 +217,12 @@ input.addEventListener("input", () => {
 
   if(!query) return;
 
+  // split query by spaces for partial matching
   const queryParts = query.split(/\s+/).map(normalize);
 
+  // filter matches where every part is included in first+last
   const matches = guests.filter(g =>
-    queryParts.every(p => normalize(g.name).includes(p))
+    queryParts.every(p => g.normalized.includes(p))
   );
 
   if(matches.length===1){
@@ -228,7 +246,7 @@ function showPopup(g){
   petals();
 }
 
-// petals animation
+// Petal animation
 function petals(){
   for(let i=0;i<16;i++){
     const p = document.createElement("div");
