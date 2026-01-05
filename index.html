@@ -25,14 +25,29 @@
   .results { margin-top: 18px; display: flex; flex-direction: column; gap: 10px; width: 100%; }
 
   .result { background: #f9fafb; border-radius: 14px; padding: 14px; font-size: 16px; cursor: pointer; opacity: 0; transform: translateY(10px); transition: opacity 0.4s ease, transform 0.4s ease; }
-
   .result.show { opacity: 1; transform: translateY(0); }
 
-  .name { font-weight: 600; }
-  .seat { font-size: 18px; font-weight: 700; color: #FF0000; margin-top: 4px; }
+  .popup { 
+    position: fixed;
+    top: 50%; left: 50%;
+    transform: translate(-50%, -50%) scale(0.5);
+    background: #fff5f5; 
+    border-radius: 24px;
+    padding: 40px 30px; 
+    box-shadow: 0 20px 60px rgba(0,0,0,.25);
+    text-align: center;
+    z-index: 100;
+    opacity: 0;
+    transition: all 0.5s ease;
+    max-width: 350px;
+    width: 90%;
+  }
+  .popup.show { transform: translate(-50%, -50%) scale(1); opacity: 1; }
+
+  .popup .name { font-size: 22px; font-weight: 700; margin-bottom: 10px; }
+  .popup .seat { font-size: 20px; font-weight: 700; color: #FF0000; }
 
   .controls { margin-bottom: 15px; display: flex; justify-content: center; gap: 10px; flex-wrap: wrap; }
-
   .controls button { padding: 6px 12px; border: none; border-radius: 8px; cursor: pointer; background: var(--theme-color); color: white; font-size: 16px; line-height: 1; }
 
   body.large-font input, body.large-font .result, body.large-font h1, body.large-font .subtitle { font-size: 1.5em !important; }
@@ -54,8 +69,10 @@
   </div>
 </div>
 
+<div id="popup" class="popup"></div>
+
 <script>
-const couple = { first: "Charlie", second: "Jennifer", date: "24-09-26" };
+const couple = { first: "Charlie", second: "Jennifer", date: "26-09-26" };
 const texts = {
   en: { placeholder: "Start typing your name", subtitle: "Type your name below" },
   vn: { placeholder: "Nhập tên của bạn", subtitle: "Gõ tên của bạn bên dưới" }
@@ -80,15 +97,10 @@ window.onload = () => {
 
 function parseCSV(csvText) {
   const lines = csvText.trim().split("\n");
-  const headers = lines.shift().split(",");
+  lines.shift(); // remove header
   seatsData = lines.map(line => {
     const items = line.split(",");
-    return {
-      first: items[0].trim(),
-      last: items[1].trim(),
-      table: items[2].trim(),
-      seat: items[3].trim()
-    };
+    return { first: items[0].trim(), last: items[1].trim(), table: items[2].trim(), seat: items[3].trim() };
   });
 }
 
@@ -105,6 +117,8 @@ document.getElementById('fontToggle').onclick = () => {
 function doSearch() {
   const q = document.getElementById('search').value.trim().toLowerCase();
   clearTimeout(clearTimer);
+  const popup = document.getElementById('popup');
+  popup.classList.remove('show');
 
   if (!q || !seatsData.length) { document.getElementById('results').innerHTML = ''; return; }
 
@@ -112,6 +126,7 @@ function doSearch() {
     clearTimer = setTimeout(() => {
       document.getElementById('search').value = '';
       document.getElementById('results').innerHTML = '';
+      popup.classList.remove('show');
     }, 10000);
   }
 
@@ -126,36 +141,24 @@ function doSearch() {
 
 function showResults(results) {
   const div = document.getElementById('results');
+  const popup = document.getElementById('popup');
   div.innerHTML = '';
 
   if (!results.length) return;
 
   if (results.length === 1) {
     const r = results[0];
-    const el = document.createElement('div');
-    el.className = 'result show';
-    el.style.background = '#ffe8e8';
-    el.style.transition = 'all 0.6s ease';
-    el.innerHTML = `<div class="name">${r.first} ${r.last}</div>
-                    <div class="seat">Table ${r.table} · Seat ${r.seat}</div>`;
-    div.appendChild(el);
-    // Animate popup
-    el.style.transform = 'scale(0.5)';
-    el.style.opacity = '0';
-    setTimeout(() => {
-      el.style.transform = 'scale(1)';
-      el.style.opacity = '1';
-    }, 50);
+    popup.innerHTML = `<div class="name">${r.first} ${r.last}</div><div class="seat">Table ${r.table} · Seat ${r.seat}</div>`;
+    popup.classList.add('show');
     return;
   }
 
-  // Multiple matches
-  results.forEach((r, i) => {
+  results.forEach((r,i) => {
     const el = document.createElement('div');
     el.className = 'result';
     el.innerHTML = `<div class="name">${r.first} ${r.last}</div><div class="seat">Table ${r.table} · Seat ${r.seat}</div>`;
     div.appendChild(el);
-    setTimeout(() => el.classList.add('show'), i*100); // stagger animation
+    setTimeout(() => el.classList.add('show'), i*100);
   });
 }
 </script>
