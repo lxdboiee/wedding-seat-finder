@@ -1,231 +1,237 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>Wedding Seating Search</title>
-
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Wedding Seat Finder</title>
 <style>
-:root {
-  --red: #b11226;
-}
+:root { --theme-color:#c084fc; }
 
-* {
-  box-sizing: border-box;
-  font-family: "Georgia", serif;
+html, body {
+  margin:0; padding:0; height:100%;
+  font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
 }
 
 body {
-  margin: 0;
-  min-height: 100vh;
-  background:
-    linear-gradient(rgba(0,0,0,.35), rgba(0,0,0,.35)),
-    url("background.png") center / cover no-repeat fixed;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  color: white;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  background: linear-gradient(rgba(255,255,255,.85), rgba(255,255,255,.85));
+  min-height:100vh;
+  overflow:hidden;
 }
 
-/* MAIN CARD */
-.app {
-  background: rgba(255,255,255,.92);
-  color: #222;
-  width: 95%;
-  max-width: 420px;
-  border-radius: 22px;
-  padding: 26px;
-  text-align: center;
-  box-shadow: 0 25px 60px rgba(0,0,0,.4);
+.container{
+  width:100%;
+  max-width:480px;
+  text-align:center;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
 }
 
-/* TITLE */
-h1 {
-  margin: 0 0 12px;
-  color: var(--red);
-  font-size: 26px;
+.card{
+  background:white;
+  border-radius:22px;
+  padding:36px 28px;
+  box-shadow:0 20px 40px rgba(0,0,0,.15);
+  animation:fadeUp .8s ease forwards;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  width:100%;
 }
 
-/* SEARCH */
-input {
-  width: 100%;
-  padding: 14px;
-  font-size: 18px;
-  border-radius: 14px;
-  border: 2px solid var(--red);
-  outline: none;
-  margin-bottom: 14px;
+@keyframes fadeUp{
+  from{opacity:0; transform:translateY(20px)}
+  to{opacity:1; transform:none}
 }
 
-input:focus {
-  animation: heartBeat 1.6s infinite;
+h1{font-size:24px; margin-bottom:8px}
+.subtitle{color:#555; margin-bottom:20px}
+
+input{
+  width:90%;
+  max-width:350px;
+  padding:16px;
+  font-size:18px;
+  border-radius:14px;
+  border:1px solid #ddd;
+  text-align:center;
+  margin-bottom:12px;
 }
 
-/* RESULTS LIST */
-.results {
-  margin-top: 12px;
+input:focus{
+  outline:none;
+  border-color:var(--theme-color);
+  box-shadow:0 0 0 4px rgba(192,132,252,.25);
 }
 
-.result {
-  padding: 10px;
-  border-bottom: 1px solid #ddd;
-  cursor: pointer;
+.results{
+  margin-top:18px;
+  display:flex;
+  flex-direction:column;
+  gap:10px;
+  width:100%;
 }
 
-.result strong {
-  color: var(--red);
+.result{
+  background:#f9fafb;
+  border-radius:14px;
+  padding:14px;
+  cursor:pointer;
+}
+
+.result:hover{
+  background:#e0d4f7;
+}
+
+.name{font-weight:600}
+.seat{
+  font-size:20px;
+  font-weight:700;
+  color:#ff0000;
+  margin-top:4px;
 }
 
 /* POPUP */
-.popup {
-  position: fixed;
-  inset: 0;
-  background: rgba(0,0,0,.6);
-  display: none;
-  justify-content: center;
-  align-items: center;
-  z-index: 99;
+.popup{
+  position:fixed;
+  top:50%; left:50%;
+  transform:translate(-50%,-50%) scale(.6);
+  opacity:0;
+  background:#fff5f7;
+  border-radius:26px;
+  padding:36px 30px;
+  box-shadow:0 25px 70px rgba(0,0,0,.25);
+  text-align:center;
+  z-index:20;
+  transition:.5s ease;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  pointer-events:none;
 }
 
-.popup-card {
-  background: white;
-  color: #222;
-  padding: 28px;
-  border-radius: 22px;
-  text-align: center;
-  width: 90%;
-  max-width: 340px;
-  animation: popIn .45s ease;
-  box-shadow: 0 30px 80px rgba(0,0,0,.5);
+.popup.show{
+  transform:translate(-50%,-50%) scale(1);
+  opacity:1;
+  pointer-events:auto;
+  animation:glow 2s ease-in-out infinite;
 }
 
-.popup-card h2 {
-  margin: 0;
-  color: var(--red);
-}
-
-.big {
-  font-size: 22px;
-  font-weight: bold;
-  margin-top: 14px;
-}
-
-/* ANIMATIONS */
-@keyframes popIn {
-  from { transform: scale(.7); opacity: 0; }
-  to { transform: scale(1); opacity: 1; }
-}
-
-@keyframes heartBeat {
-  0% { box-shadow: 0 0 0 0 rgba(177,18,38,.4); }
-  70% { box-shadow: 0 0 0 14px rgba(177,18,38,0); }
-  100% { box-shadow: 0 0 0 0 rgba(177,18,38,0); }
+@keyframes glow{
+  0%{box-shadow:0 0 0 rgba(255,120,160,.4)}
+  50%{box-shadow:0 0 30px rgba(255,120,160,.6)}
+  100%{box-shadow:0 0 0 rgba(255,120,160,.4)}
 }
 
 /* PETALS */
-.petal {
-  position: fixed;
-  width: 14px;
-  height: 14px;
-  background: radial-gradient(circle, pink, hotpink);
-  border-radius: 50%;
-  animation: fall 3s linear forwards;
-  pointer-events: none;
-  z-index: 100;
+.petal{
+  position:fixed;
+  top:-40px;
+  font-size:22px;
+  animation:fall linear forwards;
+  pointer-events:none;
+  z-index:10;
 }
 
-@keyframes fall {
-  from { transform: translateY(-20px) scale(1); opacity: 1; }
-  to { transform: translateY(110vh) scale(.3); opacity: 0; }
+@keyframes fall{
+  to{transform:translateY(110vh) rotate(360deg);opacity:0}
 }
 </style>
 </head>
 
 <body>
 
-<div class="app">
-  <h1>Find Your Seat</h1>
-  <input id="search" placeholder="Type your name…" autocomplete="off" />
-  <div class="results" id="results"></div>
-</div>
-
-<div class="popup" id="popup" onclick="closePopup()">
-  <div class="popup-card">
-    <h2 id="pName"></h2>
-    <div class="big">Table <span id="pTable"></span></div>
-    <div class="big">Seat <span id="pSeat"></span></div>
+<div class="container">
+  <div class="card">
+    <h1 id="title"></h1>
+    <div class="subtitle">Find Your Table</div>
+    <input id="search" placeholder="Start typing your name">
+    <div id="results" class="results"></div>
   </div>
 </div>
 
+<div id="popup" class="popup">
+  <div class="name" id="pName"></div>
+  <div class="seat" id="pSeat"></div>
+</div>
+
 <script>
-const CSV_URL =
-"https://docs.google.com/spreadsheets/d/e/2PACX-1vRTHOySmu1LqBL9y25rwBHDflfv4TOwbmgUB8oJkxfMqQuSs9iEeYz29KoRQNyQYEcAoqZ2EPtPR7D3/pub?gid=0&single=true&output=csv";
+const couple = { first:"Charlie", second:"Jennifer", date:"26-09-26" };
+document.getElementById("title").textContent = `Welcome to ${couple.first} & ${couple.second}'s Wedding ${couple.date}`;
 
-let guests = [];
+const CSV_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vRTHOySmu1LqBL9y25rwBHDflfv4TOwbmgUB8oJkxfMqQuSs9iEeYz29KoRQNyQYEcAoqZ2EPtPR7D3/pub?gid=0&single=true&output=csv";
 
-/* UTIL */
-const normalize = s =>
-  s.toLowerCase().trim().replace(/\s+/g," ");
+let guests=[];
+
+// normalize: lowercase, remove spaces
+const normalize = s => s.toLowerCase().replace(/\s+/g,"");
 
 fetch(CSV_URL)
   .then(r => r.text())
   .then(text => {
-    const rows = text.split("\n").slice(1);
-    guests = rows.map(r => {
-      const [name, table, seat] = r.split(",");
-      return { name, table, seat };
+    const rows = text.trim().split("\n").slice(1);
+    guests = rows.map(r=>{
+      const [first,last,table,seat] = r.split(",");
+      return {
+        name: first + " " + last,
+        table: table,
+        seat: seat
+      };
     });
   });
 
 const input = document.getElementById("search");
-const results = document.getElementById("results");
+const resultsDiv = document.getElementById("results");
+const popup = document.getElementById("popup");
 
 input.addEventListener("input", () => {
-  const q = normalize(input.value);
-  results.innerHTML = "";
-  if (!q) return;
+  const query = input.value.toLowerCase().trim();
+  resultsDiv.innerHTML = "";
+  popup.classList.remove("show");
 
-  const words = q.split(" ");
+  if(!query) return;
+
+  const queryParts = query.split(/\s+/).map(normalize);
 
   const matches = guests.filter(g =>
-    words.every(w => normalize(g.name).includes(w))
+    queryParts.every(p => normalize(g.name).includes(p))
   );
 
-  if (matches.length === 1) {
+  if(matches.length===1){
     showPopup(matches[0]);
-  } else {
-    matches.forEach(m => {
-      const div = document.createElement("div");
-      div.className = "result";
-      div.innerHTML = `<strong>${m.name}</strong><br>Table ${m.table}, Seat ${m.seat}`;
-      div.onclick = () => showPopup(m);
-      results.appendChild(div);
-    });
+    return;
   }
+
+  matches.forEach(g=>{
+    const div = document.createElement("div");
+    div.className = "result";
+    div.innerHTML = `<div class="name">${g.name}</div><div class="seat">Table ${g.table} · Seat ${g.seat}</div>`;
+    div.onclick = () => showPopup(g);
+    resultsDiv.appendChild(div);
+  });
 });
 
-/* POPUP */
-function showPopup(g) {
-  document.getElementById("pName").textContent = g.name;
-  document.getElementById("pTable").textContent = g.table;
-  document.getElementById("pSeat").textContent = g.seat;
-  document.getElementById("popup").style.display = "flex";
+function showPopup(g){
+  popup.querySelector("#pName").textContent = g.name;
+  popup.querySelector("#pSeat").textContent = `Table ${g.table} · Seat ${g.seat}`;
+  popup.classList.add("show");
   petals();
 }
 
-function closePopup() {
-  document.getElementById("popup").style.display = "none";
-}
-
-/* PETALS */
-function petals() {
-  for (let i=0;i<18;i++) {
+// petals animation
+function petals(){
+  for(let i=0;i<16;i++){
     const p = document.createElement("div");
-    p.className = "petal";
+    p.className="petal";
+    p.textContent="🌸";
     p.style.left = Math.random()*100 + "vw";
-    p.style.animationDelay = Math.random()*1 + "s";
+    p.style.animationDuration = (2+Math.random()*2) + "s";
     document.body.appendChild(p);
-    setTimeout(() => p.remove(), 3000);
+    setTimeout(()=>p.remove(),4000);
   }
 }
 </script>
