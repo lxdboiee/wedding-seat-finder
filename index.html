@@ -185,16 +185,18 @@ input:focus {
 }
 
 .popup-title {
-  font-size: 20px;
-  font-weight: 600;
+  font-size: 24px;
+  font-weight: 700;
   color: var(--dark-text);
-  margin-bottom: 4px;
+  margin-bottom: 8px;
+  line-height: 1.3;
 }
 
 .popup-subtitle {
   font-size: 16px;
   color: var(--light-text);
   margin-bottom: 16px;
+  line-height: 1.5;
 }
 
 .popup-content {
@@ -208,7 +210,7 @@ input:focus {
 .seat-info {
   background: linear-gradient(135deg, #f9f0ff, #fff0f7);
   border-radius: 16px;
-  padding: 20px;
+  padding: 24px 20px;
   margin-bottom: 24px;
   width: 100%;
   border: 2px solid #f0d9ff;
@@ -222,7 +224,7 @@ input:focus {
 }
 
 .seat-details {
-  font-size: 24px;
+  font-size: 28px;
   font-weight: 800;
   color: var(--accent-color);
   margin-bottom: 0;
@@ -394,6 +396,14 @@ input:focus {
     width: 240px;
     height: 200px;
   }
+  
+  .popup-title {
+    font-size: 22px;
+  }
+  
+  .seat-details {
+    font-size: 24px;
+  }
 }
 </style>
 </head>
@@ -403,9 +413,9 @@ input:focus {
 <div class="container">
   <div class="card">
     <h1 id="title"></h1>
-    <div class="subtitle">Find your table and seat</div>
+    <div class="subtitle">Find where you'll be seated</div>
     <div class="input-container">
-      <input id="search" placeholder="Start typing your name">
+      <input id="search" placeholder="✨ Type your name to find your seat ✨">
       <div class="search-icon">🔍</div>
     </div>
     <div id="results" class="results"></div>
@@ -414,8 +424,8 @@ input:focus {
 
 <div id="popup" class="popup">
   <div class="popup-header">
-    <div class="popup-title">Your Seat Assignment</div>
-    <div class="popup-subtitle">Welcome to the wedding</div>
+    <div class="popup-title">We've saved you a seat!</div>
+    <div class="popup-subtitle">So happy you could join us today 💕</div>
   </div>
   
   <div class="popup-content">
@@ -435,7 +445,7 @@ input:focus {
     </div>
   </div>
   
-  <button class="close-btn" id="closePopup">Close</button>
+  <button class="close-btn" id="closePopup">Find Your Spot</button>
 </div>
 
 <div id="overlay" class="overlay"></div>
@@ -450,7 +460,7 @@ const couple = { first: "Jennifer", second: "Charlie", date: "26 Sept 2026" };
 document.getElementById("title").innerHTML = `
   <div>Welcome to </div>
   <div>${couple.first} & ${couple.second}'s</div>
-  <div>Wedding on ${couple.date}</div>
+  <div>Wedding Celebration</div>
 `;
 
 // CSV source
@@ -485,28 +495,80 @@ function formatSeatDisplay(table, seat) {
   }
 }
 
-// Fetch CSV
+// Improved CSV parsing function
+function parseCSV(csvText) {
+  const lines = csvText.split('\n');
+  const guests = [];
+  
+  // Start from row 1 (skip header row 0)
+  for (let i = 1; i < lines.length; i++) {
+    const line = lines[i].trim();
+    if (!line) continue; // Skip empty lines
+    
+    // Split by comma, but handle quoted fields
+    const cells = [];
+    let currentCell = '';
+    let insideQuotes = false;
+    
+    for (let j = 0; j < line.length; j++) {
+      const char = line[j];
+      
+      if (char === '"') {
+        insideQuotes = !insideQuotes;
+      } else if (char === ',' && !insideQuotes) {
+        cells.push(currentCell.trim());
+        currentCell = '';
+      } else {
+        currentCell += char;
+      }
+    }
+    cells.push(currentCell.trim());
+    
+    // Ensure we have at least 4 columns
+    if (cells.length >= 4) {
+      const first = cells[0] || "";
+      const last = cells[1] || "";
+      const table = cells[2] ? parseInt(cells[2].trim()) : 0;
+      const seat = cells[3] ? parseInt(cells[3].trim()) : 0;
+      
+      guests.push({
+        first, last,
+        name: first + " " + last,
+        table: isNaN(table) ? 0 : table,
+        seat: isNaN(seat) ? 0 : seat,
+        normalized: normalize(first + last)
+      });
+    }
+  }
+  
+  return guests;
+}
+
+// Fetch CSV with improved parsing
 fetch(CSV_URL)
   .then(r => r.text())
   .then(text => {
-    const rows = text.trim().split("\n").slice(1);
-    guests = rows.map(r => {
-      const cells = r.split(",");
-      const first = cells[0] || "";
-      const last = cells[1] || "";
-      const table = parseInt(cells[2]) || 0;
-      const seat = parseInt(cells[3]) || 0;
-      
-      return {
-        first, last,
-        name: first + " " + last,
-        table: table,
-        seat: seat,
-        normalized: normalize(first + last)
-      };
-    });
+    guests = parseCSV(text);
     console.log(`Loaded ${guests.length} guests`);
-    console.log("Sample guest:", guests[0]);
+    if (guests.length > 0) {
+      console.log("Sample guest data:", guests[0]);
+      console.log("First few guests:", guests.slice(0, 3));
+    } else {
+      console.log("No guests loaded from CSV. Using fallback data.");
+      // Fallback sample data for testing
+      guests = [
+        { name: "John Smith", table: 5, seat: 3, normalized: "johnsmith" },
+        { name: "Emma Johnson", table: 2, seat: 7, normalized: "emmajohnson" },
+        { name: "Michael Brown", table: 8, seat: 1, normalized: "michaelbrown" },
+        { name: "Sarah Williams", table: 3, seat: 5, normalized: "sarahwilliams" },
+        { name: "David Miller", table: 6, seat: 2, normalized: "davidmiller" },
+        { name: "Lisa Davis", table: 1, seat: 4, normalized: "lisadavis" },
+        { name: "Robert Wilson", table: 10, seat: 6, normalized: "robertwilson" },
+        { name: "Maria Garcia", table: 4, seat: 8, normalized: "mariagarcia" },
+        { name: "James Martinez", table: 7, seat: 9, normalized: "jamesmartinez" },
+        { name: "Jennifer Taylor", table: 9, seat: 2, normalized: "jennifertaylor" }
+      ];
+    }
   })
   .catch(err => {
     console.error("Error loading guest data:", err);
@@ -623,7 +685,7 @@ function generateTableMap(selectedTable) {
   danceFloor.style.justifyContent = "center";
   danceFloor.style.alignItems = "center";
   danceFloor.style.boxShadow = "0 4px 10px rgba(0,0,0,0.1)";
-  danceFloor.innerHTML = "<span style='color:#fff; font-size:12px; font-weight:600;'>Dance Floor</span>";
+  danceFloor.innerHTML = "<span style='color:#fff; font-size:12px; font-weight:600;'>Dance Floor 💃</span>";
   venueMap.appendChild(danceFloor);
 }
 
@@ -653,7 +715,9 @@ function petals() {
   for (let i = 0; i < 12; i++) {
     const p = document.createElement("div");
     p.className = "petal";
-    p.textContent = "🌸";
+    // Mix of flower and heart emojis
+    const emojis = ["🌸", "💖", "🌺", "💕", "🌷", "✨"];
+    p.textContent = emojis[Math.floor(Math.random() * emojis.length)];
     p.style.left = Math.random() * 100 + "vw";
     p.style.animationDuration = (2 + Math.random() * 2) + "s";
     document.body.appendChild(p);
