@@ -5,152 +5,395 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Wedding Seat Finder</title>
 <style>
-:root { --theme-color:#c084fc; }
+:root { 
+  --theme-color: #c084fc;
+  --accent-color: #ff6b9d;
+  --light-bg: #fff9fe;
+  --dark-text: #333;
+  --light-text: #666;
+}
 
 html, body {
-  margin:0; padding:0; height:100%;
-  font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+  margin: 0; 
+  padding: 0; 
+  height: 100%;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
 }
 
 body {
-  display:flex;
-  justify-content:center;
-  align-items:center;
-  min-height:100vh;
-  overflow:hidden;
-
-  /* Background image + semi-transparent overlay */
-  background: 
-    linear-gradient(rgba(255,255,255,0.85), rgba(255,255,255,0.85)),
-    url("background.png") no-repeat center center fixed;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  overflow-x: hidden;
+  background: linear-gradient(rgba(255, 255, 255, 0.9), rgba(255, 255, 255, 0.9)),
+              url("background.png") no-repeat center center fixed;
   background-size: cover;
 }
 
-.container{
-  width:100%;
-  max-width:480px;
-  text-align:center;
-  display:flex;
-  flex-direction:column;
-  align-items:center;
-  justify-content:center;
+.container {
+  width: 100%;
+  max-width: 500px;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
 }
 
-.card{
-  background:white;
-  border-radius:22px;
-  padding:36px 28px;
-  box-shadow:0 20px 40px rgba(0,0,0,.15);
-  animation:fadeUp .8s ease forwards;
-  display:flex;
-  flex-direction:column;
-  align-items:center;
-  width:100%;
+.card {
+  background: white;
+  border-radius: 22px;
+  padding: 36px 28px;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, .1);
+  animation: fadeUp .8s ease forwards;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+  position: relative;
+  z-index: 1;
 }
 
-@keyframes fadeUp{
-  from{opacity:0; transform:translateY(20px)}
-  to{opacity:1; transform:none}
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(20px) }
+  to { opacity: 1; transform: none }
 }
 
-h1{
-  font-size:24px;
-  margin-bottom:8px;
-  line-height:1.3;
-  font-weight:600;
-  text-align:center;
+h1 {
+  font-size: 24px;
+  margin-bottom: 8px;
+  line-height: 1.4;
+  font-weight: 600;
+  text-align: center;
+  color: var(--dark-text);
 }
 
-.subtitle{color:#555; margin-bottom:20px}
-
-input{
-  width:90%;
-  max-width:350px;
-  padding:16px;
-  font-size:18px;
-  border-radius:14px;
-  border:1px solid #ddd;
-  text-align:center;
-  margin-bottom:12px;
+.subtitle {
+  color: var(--light-text);
+  margin-bottom: 24px;
+  font-size: 16px;
 }
 
-input:focus{
-  outline:none;
-  border-color:var(--theme-color);
-  box-shadow:0 0 0 4px rgba(192,132,252,.25);
+.input-container {
+  width: 100%;
+  margin-bottom: 16px;
+  position: relative;
 }
 
-.results{
-  margin-top:18px;
-  display:flex;
-  flex-direction:column;
-  gap:10px;
-  width:100%;
+input {
+  width: 100%;
+  max-width: 350px;
+  padding: 16px 20px;
+  font-size: 18px;
+  border-radius: 14px;
+  border: 1px solid #e0e0e0;
+  text-align: center;
+  transition: all 0.3s;
+  background-color: #f9f9f9;
 }
 
-.result{
-  background:#f9fafb;
-  border-radius:14px;
-  padding:14px;
-  cursor:pointer;
+input:focus {
+  outline: none;
+  border-color: var(--theme-color);
+  box-shadow: 0 0 0 4px rgba(192, 132, 252, .2);
+  background-color: white;
 }
 
-.result:hover{
-  background:#e0d4f7;
+.search-icon {
+  position: absolute;
+  right: 30px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #aaa;
+  pointer-events: none;
 }
 
-.name{font-weight:600}
-.seat{
-  font-size:20px;
-  font-weight:700;
-  color:#ff0000;
-  margin-top:4px;
+.results {
+  margin-top: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  width: 100%;
+  max-height: 300px;
+  overflow-y: auto;
+  padding-right: 5px;
+}
+
+.result {
+  background: #f9fafb;
+  border-radius: 14px;
+  padding: 16px;
+  cursor: pointer;
+  transition: all 0.3s;
+  border: 1px solid transparent;
+}
+
+.result:hover {
+  background: #f0e5ff;
+  border-color: var(--theme-color);
+  transform: translateY(-2px);
+  box-shadow: 0 5px 15px rgba(0, 0, 0, .08);
+}
+
+.name {
+  font-weight: 600;
+  font-size: 18px;
+  color: var(--dark-text);
+}
+
+.seat {
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--accent-color);
+  margin-top: 6px;
 }
 
 /* POPUP */
-.popup{
-  position:fixed;
-  top:50%; left:50%;
-  transform:translate(-50%,-50%) scale(.6);
-  opacity:0;
-  background:#fff5f7;
-  border-radius:26px;
-  padding:36px 30px;
-  box-shadow:0 25px 70px rgba(0,0,0,.25);
-  text-align:center;
-  z-index:20;
-  transition:.5s ease;
-  display:flex;
-  flex-direction:column;
-  align-items:center;
-  pointer-events:none;
+.popup {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%) scale(0.7);
+  opacity: 0;
+  background: white;
+  border-radius: 26px;
+  padding: 30px;
+  box-shadow: 0 25px 70px rgba(0, 0, 0, .2);
+  text-align: center;
+  z-index: 100;
+  transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  pointer-events: none;
+  max-width: 90%;
+  width: 420px;
+  overflow: hidden;
 }
 
-.popup.show{
-  transform:translate(-50%,-50%) scale(1);
-  opacity:1;
-  pointer-events:auto;
-  animation:glow 2s ease-in-out infinite;
+.popup.show {
+  transform: translate(-50%, -50%) scale(1);
+  opacity: 1;
+  pointer-events: auto;
 }
 
-@keyframes glow{
-  0%{box-shadow:0 0 0 rgba(255,120,160,.4)}
-  50%{box-shadow:0 0 30px rgba(255,120,160,.6)}
-  100%{box-shadow:0 0 0 rgba(255,120,160,.4)}
+.popup-header {
+  margin-bottom: 20px;
+  width: 100%;
+}
+
+.popup-title {
+  font-size: 20px;
+  font-weight: 600;
+  color: var(--dark-text);
+  margin-bottom: 4px;
+}
+
+.popup-subtitle {
+  font-size: 16px;
+  color: var(--light-text);
+  margin-bottom: 16px;
+}
+
+.popup-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+  margin-bottom: 24px;
+}
+
+.seat-info {
+  background: linear-gradient(135deg, #f9f0ff, #fff0f7);
+  border-radius: 16px;
+  padding: 20px;
+  margin-bottom: 24px;
+  width: 100%;
+  border: 2px solid #f0d9ff;
+}
+
+.seat-name {
+  font-size: 22px;
+  font-weight: 700;
+  color: var(--dark-text);
+  margin-bottom: 8px;
+}
+
+.seat-details {
+  font-size: 24px;
+  font-weight: 800;
+  color: var(--accent-color);
+  margin-bottom: 0;
+}
+
+.map-container {
+  position: relative;
+  width: 280px;
+  height: 220px;
+  margin: 0 auto;
+  background: #faf7ff;
+  border-radius: 16px;
+  border: 2px solid #f0e5ff;
+  overflow: hidden;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.venue-map {
+  width: 100%;
+  height: 100%;
+  position: relative;
+}
+
+.table {
+  position: absolute;
+  width: 50px;
+  height: 50px;
+  background: #e0d4f7;
+  border-radius: 10px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-weight: 600;
+  color: #5a4b81;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  transition: all 0.3s;
+  cursor: default;
+}
+
+.table.highlighted {
+  background: var(--theme-color);
+  color: white;
+  animation: pulse 2s infinite;
+  box-shadow: 0 0 0 8px rgba(192, 132, 252, 0.3);
+  z-index: 2;
+}
+
+@keyframes pulse {
+  0% { box-shadow: 0 0 0 0 rgba(192, 132, 252, 0.5); }
+  70% { box-shadow: 0 0 0 15px rgba(192, 132, 252, 0); }
+  100% { box-shadow: 0 0 0 0 rgba(192, 132, 252, 0); }
+}
+
+.arrow {
+  position: absolute;
+  width: 60px;
+  height: 40px;
+  z-index: 3;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  animation: bounce 1.5s infinite;
+}
+
+.arrow-line {
+  width: 2px;
+  height: 30px;
+  background: var(--accent-color);
+}
+
+.arrow-head {
+  width: 0;
+  height: 0;
+  border-left: 8px solid transparent;
+  border-right: 8px solid transparent;
+  border-top: 12px solid var(--accent-color);
+}
+
+@keyframes bounce {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-10px); }
+}
+
+.close-btn {
+  background: var(--theme-color);
+  color: white;
+  border: none;
+  border-radius: 12px;
+  padding: 12px 24px;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s;
+  margin-top: 10px;
+}
+
+.close-btn:hover {
+  background: #b073f0;
+  transform: translateY(-2px);
+  box-shadow: 0 5px 15px rgba(192, 132, 252, 0.4);
+}
+
+.overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5);
+  z-index: 99;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.4s;
+}
+
+.overlay.show {
+  opacity: 1;
+  pointer-events: auto;
 }
 
 /* PETALS */
-.petal{
-  position:fixed;
-  top:-40px;
-  font-size:22px;
-  animation:fall linear forwards;
-  pointer-events:none;
-  z-index:10;
+.petal {
+  position: fixed;
+  top: -40px;
+  font-size: 22px;
+  animation: fall linear forwards;
+  pointer-events: none;
+  z-index: 10;
 }
 
-@keyframes fall{
-  to{transform:translateY(110vh) rotate(360deg);opacity:0}
+@keyframes fall {
+  to { transform: translateY(110vh) rotate(360deg); opacity: 0 }
+}
+
+/* Scrollbar styling */
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: #f1f1f1;
+  border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--theme-color);
+  border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #b073f0;
+}
+
+/* Responsive adjustments */
+@media (max-width: 600px) {
+  .card {
+    padding: 28px 20px;
+  }
+  
+  .popup {
+    width: 90%;
+    padding: 24px 20px;
+  }
+  
+  .map-container {
+    width: 240px;
+    height: 200px;
+  }
 }
 </style>
 </head>
@@ -160,20 +403,46 @@ input:focus{
 <div class="container">
   <div class="card">
     <h1 id="title"></h1>
-    <div class="subtitle">Find your Table</div>
-    <input id="search" placeholder="Start typing your name">
+    <div class="subtitle">Find your table and seat</div>
+    <div class="input-container">
+      <input id="search" placeholder="Start typing your name">
+      <div class="search-icon">🔍</div>
+    </div>
     <div id="results" class="results"></div>
   </div>
 </div>
 
 <div id="popup" class="popup">
-  <div class="name" id="pName"></div>
-  <div class="seat" id="pSeat"></div>
+  <div class="popup-header">
+    <div class="popup-title">Your Seat Assignment</div>
+    <div class="popup-subtitle">Welcome to the wedding</div>
+  </div>
+  
+  <div class="popup-content">
+    <div class="seat-info">
+      <div class="seat-name" id="pName"></div>
+      <div class="seat-details" id="pSeat"></div>
+    </div>
+    
+    <div class="map-container">
+      <div class="venue-map" id="venueMap">
+        <!-- Tables will be generated here -->
+      </div>
+      <div class="arrow" id="arrow">
+        <div class="arrow-line"></div>
+        <div class="arrow-head"></div>
+      </div>
+    </div>
+  </div>
+  
+  <button class="close-btn" id="closePopup">Close</button>
 </div>
+
+<div id="overlay" class="overlay"></div>
 
 <script>
 // Couple info
-const couple = { first:"Jennifer", second:"Charlie", date:"26 Sept 2026" };
+const couple = { first: "Jennifer", second: "Charlie", date: "26 Sept 2026" };
 // Multi-line title
 document.getElementById("title").innerHTML = `
   <div>Welcome to </div>
@@ -184,38 +453,88 @@ document.getElementById("title").innerHTML = `
 // CSV source
 const CSV_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vRTHOySmu1LqBL9y25rwBHDflfv4TOwbmgUB8oJkxfMqQuSs9iEeYz29KoRQNyQYEcAoqZ2EPtPR7D3/pub?gid=0&single=true&output=csv";
 
-let guests=[];
+let guests = [];
+
+// Table layout configuration
+const tableLayout = [
+  { id: 1, x: 20, y: 30 },
+  { id: 2, x: 80, y: 30 },
+  { id: 3, x: 140, y: 30 },
+  { id: 4, x: 200, y: 30 },
+  { id: 5, x: 50, y: 100 },
+  { id: 6, x: 110, y: 100 },
+  { id: 7, x: 170, y: 100 },
+  { id: 8, x: 20, y: 160 },
+  { id: 9, x: 80, y: 160 },
+  { id: 10, x: 140, y: 160 },
+  { id: 11, x: 200, y: 160 }
+];
 
 // Normalize text: lowercase & remove spaces
-const normalize = s => s.toLowerCase().replace(/\s+/g,"");
+const normalize = s => s.toLowerCase().replace(/\s+/g, "");
 
 // Fetch CSV
 fetch(CSV_URL)
   .then(r => r.text())
   .then(text => {
     const rows = text.trim().split("\n").slice(1);
-    guests = rows.map(r=>{
-      const [first,last,table,seat] = r.split(",");
+    guests = rows.map(r => {
+      const [first, last, table, seat] = r.split(",");
       return {
         first, last,
         name: first + " " + last,
-        table, seat,
+        table: parseInt(table) || 0,
+        seat: parseInt(seat) || 0,
         normalized: normalize(first + last)
       };
     });
+    console.log(`Loaded ${guests.length} guests`);
+  })
+  .catch(err => {
+    console.error("Error loading guest data:", err);
+    // Fallback sample data for testing
+    guests = [
+      { name: "John Smith", table: 5, seat: 3, normalized: "johnsmith" },
+      { name: "Emma Johnson", table: 2, seat: 7, normalized: "emmajohnson" },
+      { name: "Michael Brown", table: 8, seat: 1, normalized: "michaelbrown" },
+      { name: "Sarah Williams", table: 3, seat: 5, normalized: "sarahwilliams" },
+      { name: "David Miller", table: 6, seat: 2, normalized: "davidmiller" },
+      { name: "Lisa Davis", table: 1, seat: 4, normalized: "lisadavis" },
+      { name: "Robert Wilson", table: 10, seat: 6, normalized: "robertwilson" },
+      { name: "Maria Garcia", table: 4, seat: 8, normalized: "mariagarcia" },
+      { name: "James Martinez", table: 7, seat: 9, normalized: "jamesmartinez" },
+      { name: "Jennifer Taylor", table: 9, seat: 2, normalized: "jennifertaylor" }
+    ];
   });
 
 // DOM references
 const input = document.getElementById("search");
 const resultsDiv = document.getElementById("results");
 const popup = document.getElementById("popup");
+const overlay = document.getElementById("overlay");
+const closeBtn = document.getElementById("closePopup");
+const venueMap = document.getElementById("venueMap");
+const arrow = document.getElementById("arrow");
 
-input.addEventListener("input", () => {
+// Event listeners
+input.addEventListener("input", handleSearch);
+closeBtn.addEventListener("click", closePopup);
+overlay.addEventListener("click", closePopup);
+
+// Close popup with ESC key
+document.addEventListener("keydown", (e) => {
+  if (e.key === "Escape" && popup.classList.contains("show")) {
+    closePopup();
+  }
+});
+
+function handleSearch() {
   const query = input.value.toLowerCase().trim();
   resultsDiv.innerHTML = "";
   popup.classList.remove("show");
+  overlay.classList.remove("show");
 
-  if(!query) return;
+  if (!query) return;
 
   // split query by spaces for partial matching
   const queryParts = query.split(/\s+/).map(normalize);
@@ -225,39 +544,108 @@ input.addEventListener("input", () => {
     queryParts.every(p => g.normalized.includes(p))
   );
 
-  if(matches.length===1){
+  if (matches.length === 1) {
     showPopup(matches[0]);
     return;
   }
 
-  matches.forEach(g=>{
+  matches.forEach(g => {
     const div = document.createElement("div");
     div.className = "result";
     div.innerHTML = `<div class="name">${g.name}</div><div class="seat">Table ${g.table} · Seat ${g.seat}</div>`;
     div.onclick = () => showPopup(g);
     resultsDiv.appendChild(div);
   });
-});
+}
 
-function showPopup(g){
-  popup.querySelector("#pName").textContent = g.name;
-  popup.querySelector("#pSeat").textContent = `Table ${g.table} · Seat ${g.seat}`;
+function showPopup(guest) {
+  // Update guest info
+  document.getElementById("pName").textContent = guest.name;
+  document.getElementById("pSeat").textContent = `Table ${guest.table} · Seat ${guest.seat}`;
+  
+  // Generate table map
+  generateTableMap(guest.table);
+  
+  // Position arrow pointing to the table
+  positionArrow(guest.table);
+  
+  // Show popup and overlay
   popup.classList.add("show");
+  overlay.classList.add("show");
+  
+  // Add petals effect
   petals();
 }
 
+function generateTableMap(selectedTable) {
+  venueMap.innerHTML = "";
+  
+  // Create tables
+  tableLayout.forEach(table => {
+    const tableEl = document.createElement("div");
+    tableEl.className = `table ${table.id === selectedTable ? 'highlighted' : ''}`;
+    tableEl.textContent = table.id;
+    tableEl.style.left = `${table.x}px`;
+    tableEl.style.top = `${table.y}px`;
+    tableEl.title = `Table ${table.id}`;
+    venueMap.appendChild(tableEl);
+  });
+  
+  // Add dance floor in the center
+  const danceFloor = document.createElement("div");
+  danceFloor.style.position = "absolute";
+  danceFloor.style.left = "100px";
+  danceFloor.style.top = "70px";
+  danceFloor.style.width = "80px";
+  danceFloor.style.height = "80px";
+  danceFloor.style.background = "linear-gradient(135deg, #ffd6e7, #ffb3d9)";
+  danceFloor.style.borderRadius = "50%";
+  danceFloor.style.display = "flex";
+  danceFloor.style.justifyContent = "center";
+  danceFloor.style.alignItems = "center";
+  danceFloor.style.boxShadow = "0 4px 10px rgba(0,0,0,0.1)";
+  danceFloor.innerHTML = "<span style='color:#fff; font-size:12px; font-weight:600;'>Dance Floor</span>";
+  venueMap.appendChild(danceFloor);
+}
+
+function positionArrow(selectedTable) {
+  const tableConfig = tableLayout.find(t => t.id === selectedTable);
+  if (!tableConfig) return;
+  
+  // Position arrow based on table location
+  // Arrow appears above the table, pointing down
+  arrow.style.left = `${tableConfig.x + 25}px`;
+  arrow.style.top = `${tableConfig.y - 60}px`;
+  
+  // Make arrow visible
+  arrow.style.display = "flex";
+}
+
+function closePopup() {
+  popup.classList.remove("show");
+  overlay.classList.remove("show");
+  input.value = "";
+  resultsDiv.innerHTML = "";
+  input.focus();
+}
+
 // Petal animation
-function petals(){
-  for(let i=0;i<16;i++){
+function petals() {
+  for (let i = 0; i < 12; i++) {
     const p = document.createElement("div");
-    p.className="petal";
-    p.textContent="🌸";
-    p.style.left = Math.random()*100 + "vw";
-    p.style.animationDuration = (2+Math.random()*2) + "s";
+    p.className = "petal";
+    p.textContent = "🌸";
+    p.style.left = Math.random() * 100 + "vw";
+    p.style.animationDuration = (2 + Math.random() * 2) + "s";
     document.body.appendChild(p);
-    setTimeout(()=>p.remove(),4000);
+    setTimeout(() => p.remove(), 4000);
   }
 }
+
+// Initial focus on input
+window.addEventListener("load", () => {
+  input.focus();
+});
 </script>
 
 </body>
