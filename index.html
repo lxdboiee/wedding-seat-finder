@@ -311,6 +311,133 @@ input:focus {
   50% { transform: translateY(-10px); }
 }
 
+/* DANCING COUPLE ANIMATION */
+.dance-floor {
+  position: absolute;
+  left: 100px;
+  top: 70px;
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+  overflow: hidden;
+}
+
+.dance-floor-bg {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(135deg, #ffd6e7, #ffb3d9);
+  border-radius: 50%;
+  z-index: 1;
+}
+
+.dance-floor-label {
+  position: absolute;
+  bottom: 5px;
+  color: white;
+  font-size: 10px;
+  font-weight: 600;
+  z-index: 4;
+  text-shadow: 0 1px 2px rgba(0,0,0,0.2);
+}
+
+.dancing-couple {
+  position: relative;
+  width: 60px;
+  height: 60px;
+  z-index: 2;
+}
+
+.dancer {
+  position: absolute;
+  font-size: 24px;
+  animation-duration: 1.5s;
+  animation-iteration-count: infinite;
+  animation-timing-function: ease-in-out;
+}
+
+.dancer-female {
+  left: 10px;
+  animation-name: dance-female;
+  z-index: 3;
+}
+
+.dancer-male {
+  right: 10px;
+  animation-name: dance-male;
+  z-index: 2;
+}
+
+@keyframes dance-female {
+  0%, 100% { 
+    transform: translateY(0) rotate(0deg); 
+  }
+  25% { 
+    transform: translateY(-10px) rotate(-10deg); 
+  }
+  50% { 
+    transform: translateY(-5px) rotate(5deg); 
+  }
+  75% { 
+    transform: translateY(-8px) rotate(8deg); 
+  }
+}
+
+@keyframes dance-male {
+  0%, 100% { 
+    transform: translateY(0) rotate(0deg); 
+  }
+  25% { 
+    transform: translateY(-8px) rotate(10deg); 
+  }
+  50% { 
+    transform: translateY(-3px) rotate(-5deg); 
+  }
+  75% { 
+    transform: translateY(-6px) rotate(-8deg); 
+  }
+}
+
+.dance-sparkle {
+  position: absolute;
+  font-size: 12px;
+  opacity: 0;
+  animation: sparkle 2s infinite;
+}
+
+.dance-sparkle:nth-child(1) {
+  top: 5px;
+  left: 20px;
+  animation-delay: 0s;
+}
+
+.dance-sparkle:nth-child(2) {
+  top: 20px;
+  right: 5px;
+  animation-delay: 0.5s;
+}
+
+.dance-sparkle:nth-child(3) {
+  bottom: 10px;
+  left: 10px;
+  animation-delay: 1s;
+}
+
+.dance-sparkle:nth-child(4) {
+  bottom: 5px;
+  right: 15px;
+  animation-delay: 1.5s;
+}
+
+@keyframes sparkle {
+  0%, 100% { opacity: 0; transform: scale(0.5); }
+  50% { opacity: 1; transform: scale(1); }
+}
+
 .close-btn {
   background: var(--theme-color);
   color: white;
@@ -403,6 +530,22 @@ input:focus {
   
   .seat-details {
     font-size: 24px;
+  }
+  
+  .dance-floor {
+    left: 80px;
+    top: 60px;
+    width: 70px;
+    height: 70px;
+  }
+  
+  .dancing-couple {
+    width: 50px;
+    height: 50px;
+  }
+  
+  .dancer {
+    font-size: 20px;
   }
 }
 </style>
@@ -658,6 +801,50 @@ function showPopup(guest) {
   petals();
 }
 
+function createDancingCouple() {
+  const danceFloor = document.createElement("div");
+  danceFloor.className = "dance-floor";
+  
+  // Background
+  const bg = document.createElement("div");
+  bg.className = "dance-floor-bg";
+  danceFloor.appendChild(bg);
+  
+  // Dancing couple container
+  const coupleContainer = document.createElement("div");
+  coupleContainer.className = "dancing-couple";
+  
+  // Female dancer
+  const femaleDancer = document.createElement("div");
+  femaleDancer.className = "dancer dancer-female";
+  femaleDancer.textContent = "💃";
+  coupleContainer.appendChild(femaleDancer);
+  
+  // Male dancer
+  const maleDancer = document.createElement("div");
+  maleDancer.className = "dancer dancer-male";
+  maleDancer.textContent = "🕺";
+  coupleContainer.appendChild(maleDancer);
+  
+  // Sparkles
+  for (let i = 0; i < 4; i++) {
+    const sparkle = document.createElement("div");
+    sparkle.className = "dance-sparkle";
+    sparkle.textContent = "✨";
+    coupleContainer.appendChild(sparkle);
+  }
+  
+  danceFloor.appendChild(coupleContainer);
+  
+  // Label
+  const label = document.createElement("div");
+  label.className = "dance-floor-label";
+  label.textContent = "Dance Floor";
+  danceFloor.appendChild(label);
+  
+  return danceFloor;
+}
+
 function generateTableMap(selectedTable) {
   venueMap.innerHTML = "";
   
@@ -672,20 +859,8 @@ function generateTableMap(selectedTable) {
     venueMap.appendChild(tableEl);
   });
   
-  // Add dance floor in the center
-  const danceFloor = document.createElement("div");
-  danceFloor.style.position = "absolute";
-  danceFloor.style.left = "100px";
-  danceFloor.style.top = "70px";
-  danceFloor.style.width = "80px";
-  danceFloor.style.height = "80px";
-  danceFloor.style.background = "linear-gradient(135deg, #ffd6e7, #ffb3d9)";
-  danceFloor.style.borderRadius = "50%";
-  danceFloor.style.display = "flex";
-  danceFloor.style.justifyContent = "center";
-  danceFloor.style.alignItems = "center";
-  danceFloor.style.boxShadow = "0 4px 10px rgba(0,0,0,0.1)";
-  danceFloor.innerHTML = "<span style='color:#fff; font-size:12px; font-weight:600;'>Dance Floor 💃</span>";
+  // Add dancing couple floor
+  const danceFloor = createDancingCouple();
   venueMap.appendChild(danceFloor);
 }
 
