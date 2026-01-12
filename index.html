@@ -3,14 +3,16 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Wedding Seat Finder</title>
+<title>Garden of Eden Wedding - Seat Finder</title>
 <style>
 :root { 
-  --theme-color: #c084fc;
-  --accent-color: #ff6b9d;
-  --light-bg: #fff9fe;
-  --dark-text: #333;
-  --light-text: #666;
+  --theme-color: #8BC34A; /* Garden green */
+  --accent-color: #FF9800; /* Warm orange accent */
+  --light-bg: #F9FFE8; /* Light garden background */
+  --dark-text: #2E3D1F; /* Deep green text */
+  --light-text: #6B7B5E; /* Muted green text */
+  --stage-color: #FFEB3B; /* Stage yellow */
+  --table-color: #C8E6C9; /* Light table color */
 }
 
 html, body {
@@ -27,13 +29,14 @@ body {
   min-height: 100vh;
   overflow-x: hidden;
   background: linear-gradient(rgba(255, 255, 255, 0.9), rgba(255, 255, 255, 0.9)),
-              url("background.png") no-repeat center center fixed;
+              radial-gradient(circle at 10% 20%, rgba(184, 233, 148, 0.2) 0%, rgba(113, 188, 120, 0.2) 90%);
   background-size: cover;
+  background-attachment: fixed;
 }
 
 .container {
   width: 100%;
-  max-width: 500px;
+  max-width: 600px;
   text-align: center;
   display: flex;
   flex-direction: column;
@@ -46,7 +49,7 @@ body {
   background: white;
   border-radius: 22px;
   padding: 36px 28px;
-  box-shadow: 0 20px 40px rgba(0, 0, 0, .1);
+  box-shadow: 0 20px 40px rgba(46, 61, 31, .15);
   animation: fadeUp .8s ease forwards;
   display: flex;
   flex-direction: column;
@@ -54,6 +57,7 @@ body {
   width: 100%;
   position: relative;
   z-index: 1;
+  border: 2px solid var(--theme-color);
 }
 
 @keyframes fadeUp {
@@ -62,18 +66,27 @@ body {
 }
 
 h1 {
-  font-size: 24px;
+  font-size: 28px;
   margin-bottom: 8px;
   line-height: 1.4;
-  font-weight: 600;
+  font-weight: 700;
   text-align: center;
   color: var(--dark-text);
+  text-shadow: 1px 1px 2px rgba(0,0,0,0.05);
+}
+
+.wedding-title {
+  background: linear-gradient(135deg, var(--theme-color), var(--accent-color));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
 }
 
 .subtitle {
   color: var(--light-text);
   margin-bottom: 24px;
   font-size: 16px;
+  font-style: italic;
 }
 
 .input-container {
@@ -88,16 +101,17 @@ input {
   padding: 16px 20px;
   font-size: 18px;
   border-radius: 14px;
-  border: 1px solid #e0e0e0;
+  border: 2px solid #C8E6C9;
   text-align: center;
   transition: all 0.3s;
-  background-color: #f9f9f9;
+  background-color: #F1F8E9;
+  color: var(--dark-text);
 }
 
 input:focus {
   outline: none;
   border-color: var(--theme-color);
-  box-shadow: 0 0 0 4px rgba(192, 132, 252, .2);
+  box-shadow: 0 0 0 4px rgba(139, 195, 74, .2);
   background-color: white;
 }
 
@@ -106,7 +120,7 @@ input:focus {
   right: 30px;
   top: 50%;
   transform: translateY(-50%);
-  color: #aaa;
+  color: var(--theme-color);
   pointer-events: none;
 }
 
@@ -122,7 +136,7 @@ input:focus {
 }
 
 .result {
-  background: #f9fafb;
+  background: #F1F8E9;
   border-radius: 14px;
   padding: 16px;
   cursor: pointer;
@@ -131,10 +145,10 @@ input:focus {
 }
 
 .result:hover {
-  background: #f0e5ff;
+  background: #E8F5E9;
   border-color: var(--theme-color);
   transform: translateY(-2px);
-  box-shadow: 0 5px 15px rgba(0, 0, 0, .08);
+  box-shadow: 0 5px 15px rgba(139, 195, 74, .2);
 }
 
 .name {
@@ -160,7 +174,7 @@ input:focus {
   background: white;
   border-radius: 26px;
   padding: 30px;
-  box-shadow: 0 25px 70px rgba(0, 0, 0, .2);
+  box-shadow: 0 25px 70px rgba(46, 61, 31, .25);
   text-align: center;
   z-index: 100;
   transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
@@ -169,8 +183,9 @@ input:focus {
   align-items: center;
   pointer-events: none;
   max-width: 90%;
-  width: 420px;
+  width: 500px;
   overflow: hidden;
+  border: 3px solid var(--theme-color);
 }
 
 .popup.show {
@@ -197,6 +212,7 @@ input:focus {
   color: var(--light-text);
   margin-bottom: 16px;
   line-height: 1.5;
+  font-style: italic;
 }
 
 .popup-content {
@@ -208,12 +224,12 @@ input:focus {
 }
 
 .seat-info {
-  background: linear-gradient(135deg, #f9f0ff, #fff0f7);
+  background: linear-gradient(135deg, #F1F8E9, #FFF8E1);
   border-radius: 16px;
   padding: 24px 20px;
   margin-bottom: 24px;
   width: 100%;
-  border: 2px solid #f0d9ff;
+  border: 2px solid var(--theme-color);
 }
 
 .seat-name {
@@ -232,12 +248,12 @@ input:focus {
 
 .map-container {
   position: relative;
-  width: 280px;
-  height: 220px;
+  width: 400px;
+  height: 280px;
   margin: 0 auto;
-  background: #faf7ff;
+  background: #F9FFE8;
   border-radius: 16px;
-  border: 2px solid #f0e5ff;
+  border: 3px solid var(--theme-color);
   overflow: hidden;
   display: flex;
   justify-content: center;
@@ -250,34 +266,54 @@ input:focus {
   position: relative;
 }
 
-.table {
+.stage {
   position: absolute;
-  width: 50px;
-  height: 50px;
-  background: #e0d4f7;
+  width: 140px;
+  height: 60px;
+  background: var(--stage-color);
   border-radius: 10px;
   display: flex;
   justify-content: center;
   align-items: center;
   font-weight: 600;
-  color: #5a4b81;
+  color: #333;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+  border: 2px solid #FFC107;
+  font-size: 12px;
+  text-align: center;
+  padding: 5px;
+}
+
+.table {
+  position: absolute;
+  width: 40px;
+  height: 40px;
+  background: var(--table-color);
+  border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-weight: 600;
+  color: var(--dark-text);
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
   transition: all 0.3s;
   cursor: default;
+  border: 2px solid #A5D6A7;
 }
 
 .table.highlighted {
   background: var(--theme-color);
   color: white;
   animation: pulse 2s infinite;
-  box-shadow: 0 0 0 8px rgba(192, 132, 252, 0.3);
+  box-shadow: 0 0 0 8px rgba(139, 195, 74, 0.3);
   z-index: 2;
+  border: 2px solid white;
 }
 
 @keyframes pulse {
-  0% { box-shadow: 0 0 0 0 rgba(192, 132, 252, 0.5); }
-  70% { box-shadow: 0 0 0 15px rgba(192, 132, 252, 0); }
-  100% { box-shadow: 0 0 0 0 rgba(192, 132, 252, 0); }
+  0% { box-shadow: 0 0 0 0 rgba(139, 195, 74, 0.5); }
+  70% { box-shadow: 0 0 0 15px rgba(139, 195, 74, 0); }
+  100% { box-shadow: 0 0 0 0 rgba(139, 195, 74, 0); }
 }
 
 .arrow {
@@ -311,11 +347,8 @@ input:focus {
   50% { transform: translateY(-10px); }
 }
 
-/* DANCING COUPLE ANIMATION */
 .dance-floor {
   position: absolute;
-  left: 100px;
-  top: 70px;
   width: 80px;
   height: 80px;
   border-radius: 50%;
@@ -330,7 +363,7 @@ input:focus {
   position: absolute;
   width: 100%;
   height: 100%;
-  background: linear-gradient(135deg, #ffd6e7, #ffb3d9);
+  background: linear-gradient(135deg, #FFECB3, #FFD54F);
   border-radius: 50%;
   z-index: 1;
 }
@@ -338,7 +371,7 @@ input:focus {
 .dance-floor-label {
   position: absolute;
   bottom: 5px;
-  color: white;
+  color: #333;
   font-size: 10px;
   font-weight: 600;
   z-index: 4;
@@ -452,9 +485,9 @@ input:focus {
 }
 
 .close-btn:hover {
-  background: #b073f0;
+  background: #689F38;
   transform: translateY(-2px);
-  box-shadow: 0 5px 15px rgba(192, 132, 252, 0.4);
+  box-shadow: 0 5px 15px rgba(139, 195, 74, 0.4);
 }
 
 .overlay {
@@ -463,7 +496,7 @@ input:focus {
   left: 0;
   width: 100%;
   height: 100%;
-  background: rgba(0, 0, 0, 0.5);
+  background: rgba(46, 61, 31, 0.7);
   z-index: 99;
   opacity: 0;
   pointer-events: none;
@@ -475,18 +508,42 @@ input:focus {
   pointer-events: auto;
 }
 
-/* PETALS */
-.petal {
+/* GARDEN ELEMENTS */
+.garden-element {
   position: fixed;
-  top: -40px;
-  font-size: 22px;
-  animation: fall linear forwards;
+  font-size: 24px;
+  animation: float linear forwards;
   pointer-events: none;
   z-index: 10;
 }
 
-@keyframes fall {
+@keyframes float {
   to { transform: translateY(110vh) rotate(360deg); opacity: 0 }
+}
+
+/* Buttons for navigation */
+.nav-buttons {
+  display: flex;
+  gap: 10px;
+  margin-top: 20px;
+}
+
+.nav-btn {
+  background: var(--table-color);
+  color: var(--dark-text);
+  border: 2px solid var(--theme-color);
+  border-radius: 12px;
+  padding: 10px 20px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s;
+}
+
+.nav-btn:hover {
+  background: var(--theme-color);
+  color: white;
+  transform: translateY(-2px);
 }
 
 /* Scrollbar styling */
@@ -495,7 +552,7 @@ input:focus {
 }
 
 ::-webkit-scrollbar-track {
-  background: #f1f1f1;
+  background: #F1F8E9;
   border-radius: 10px;
 }
 
@@ -505,7 +562,7 @@ input:focus {
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: #b073f0;
+  background: #689F38;
 }
 
 /* Responsive adjustments */
@@ -520,8 +577,8 @@ input:focus {
   }
   
   .map-container {
-    width: 240px;
-    height: 200px;
+    width: 320px;
+    height: 220px;
   }
   
   .popup-title {
@@ -532,20 +589,8 @@ input:focus {
     font-size: 24px;
   }
   
-  .dance-floor {
-    left: 80px;
-    top: 60px;
-    width: 70px;
-    height: 70px;
-  }
-  
-  .dancing-couple {
-    width: 50px;
-    height: 50px;
-  }
-  
-  .dancer {
-    font-size: 20px;
+  h1 {
+    font-size: 24px;
   }
 }
 </style>
@@ -556,7 +601,7 @@ input:focus {
 <div class="container">
   <div class="card">
     <h1 id="title"></h1>
-    <div class="subtitle">Find where you'll be seated</div>
+    <div class="subtitle">Find your table in the Garden of Eden</div>
     <div class="input-container">
       <input id="search" placeholder="Start typing your name">
       <div class="search-icon">🔍</div>
@@ -567,8 +612,8 @@ input:focus {
 
 <div id="popup" class="popup">
   <div class="popup-header">
-    <div class="popup-title">We've saved you a seat!</div>
-    <div class="popup-subtitle">So happy you could join us today 💕</div>
+    <div class="popup-title">Welcome to the Garden of Eden</div>
+    <div class="popup-subtitle">We're delighted to have you with us today 🌿</div>
   </div>
   
   <div class="popup-content">
@@ -588,42 +633,87 @@ input:focus {
     </div>
   </div>
   
-  <button class="close-btn" id="closePopup">Find Your Spot</button>
+  <div class="nav-buttons">
+    <button class="nav-btn" id="viewLayout">View Full Layout</button>
+    <button class="close-btn" id="closePopup">Find My Table</button>
+  </div>
 </div>
 
 <div id="overlay" class="overlay"></div>
 
 <script>
-// CONFIGURATION - Set this to false if you don't have seat numbers
+// CONFIGURATION
 const showSeats = true; // Change to false to hide seat numbers
 
 // Couple info
 const couple = { first: "Jennifer", second: "Charlie", date: "26 Sept 2026" };
 // Multi-line title
 document.getElementById("title").innerHTML = `
-  <div>Welcome to </div>
-  <div>${couple.first} & ${couple.second}'s</div>
-  <div>Wedding 26 Sept 2026</div>
+  <div class="wedding-title">Garden of Eden Wedding</div>
+  <div>${couple.first} & ${couple.second}</div>
+  <div style="font-size: 18px; color: var(--light-text); margin-top: 5px;">26 September 2026</div>
 `;
 
-// CSV source
-const CSV_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vRTHOySmu1LqBL9y25rwBHDflfv4TOwbmgUB8oJkxfMqQuSs9iEeYz29KoRQNyQYEcAoqZ2EPtPR7D3/pub?gid=0&single=true&output=csv";
-
-let guests = [];
-
-// Table layout configuration
+// Updated table layout based on the PDF
 const tableLayout = [
-  { id: 1, x: 20, y: 30 },
-  { id: 2, x: 80, y: 30 },
-  { id: 3, x: 140, y: 30 },
-  { id: 4, x: 200, y: 30 },
-  { id: 5, x: 50, y: 100 },
-  { id: 6, x: 110, y: 100 },
-  { id: 7, x: 170, y: 100 },
-  { id: 8, x: 20, y: 160 },
-  { id: 9, x: 80, y: 160 },
-  { id: 10, x: 140, y: 160 },
-  { id: 11, x: 200, y: 160 }
+  // Stage area
+  { id: "STAGE", x: 200, y: 30, width: 140, height: 60, type: "stage", label: "Band/DJ Stage" },
+  
+  // Top row from PDF: 17, 13, 7, 5, 10, 16
+  { id: 17, x: 20, y: 110 },
+  { id: 13, x: 80, y: 110 },
+  { id: 7, x: 140, y: 110 },
+  { id: 5, x: 200, y: 110 },
+  { id: 10, x: 260, y: 110 },
+  { id: 16, x: 320, y: 110 },
+  
+  // Middle row from PDF: 19, 15, 9, 1, 2, 6, 12, 18
+  { id: 19, x: 20, y: 170 },
+  { id: 15, x: 80, y: 170 },
+  { id: 9, x: 140, y: 170 },
+  { id: 1, x: 200, y: 170 },
+  { id: 2, x: 260, y: 170 },
+  { id: 6, x: 320, y: 170 },
+  { id: 12, x: 380, y: 170 },
+  { id: 18, x: 440, y: 170 },
+  
+  // Bottom row from PDF: 11, 3, 4, 8, 14, 20
+  { id: 11, x: 50, y: 230 },
+  { id: 3, x: 110, y: 230 },
+  { id: 4, x: 170, y: 230 },
+  { id: 8, x: 230, y: 230 },
+  { id: 14, x: 290, y: 230 },
+  { id: 20, x: 350, y: 230 },
+  
+  // Main table (from PDF: "MAN TABLE" likely meaning "Main Table")
+  { id: "MAIN", x: 380, y: 30, width: 100, height: 50, type: "main", label: "Main Table" },
+];
+
+// Sample guest data with tables matching the layout
+let guests = [
+  { name: "John Smith", table: 5, seat: 3, normalized: "johnsmith" },
+  { name: "Emma Johnson", table: 2, seat: 7, normalized: "emmajohnson" },
+  { name: "Michael Brown", table: 8, seat: 1, normalized: "michaelbrown" },
+  { name: "Sarah Williams", table: 3, seat: 5, normalized: "sarahwilliams" },
+  { name: "David Miller", table: 6, seat: 2, normalized: "davidmiller" },
+  { name: "Lisa Davis", table: 1, seat: 4, normalized: "lisadavis" },
+  { name: "Robert Wilson", table: 10, seat: 6, normalized: "robertwilson" },
+  { name: "Maria Garcia", table: 4, seat: 8, normalized: "mariagarcia" },
+  { name: "James Martinez", table: 7, seat: 9, normalized: "jamesmartinez" },
+  { name: "Jennifer Taylor", table: 9, seat: 2, normalized: "jennifertaylor" },
+  { name: "Thomas Anderson", table: 11, seat: 1, normalized: "thomasanderson" },
+  { name: "Olivia Clark", table: 12, seat: 3, normalized: "oliviaclark" },
+  { name: "William Lewis", table: 13, seat: 5, normalized: "williamlewis" },
+  { name: "Sophia Walker", table: 14, seat: 2, normalized: "sophiawalker" },
+  { name: "Daniel Hall", table: 15, seat: 4, normalized: "danielhall" },
+  { name: "Isabella Allen", table: 16, seat: 6, normalized: "isabellaallen" },
+  { name: "Matthew Young", table: 17, seat: 1, normalized: "matthewyoung" },
+  { name: "Charlotte King", table: 18, seat: 3, normalized: "charlotteking" },
+  { name: "Christopher Wright", table: 19, seat: 5, normalized: "christopherwright" },
+  { name: "Amelia Scott", table: 20, seat: 2, normalized: "ameliascott" },
+  { name: "Jennifer Bride", table: "MAIN", seat: 1, normalized: "jenniferbride" },
+  { name: "Charlie Groom", table: "MAIN", seat: 2, normalized: "charliegroom" },
+  { name: "Parents", table: "MAIN", seat: 3, normalized: "parents" }
 ];
 
 // Normalize text: lowercase & remove spaces
@@ -631,104 +721,14 @@ const normalize = s => s.toLowerCase().replace(/\s+/g, "");
 
 // Function to format seat display
 function formatSeatDisplay(table, seat) {
-  if (showSeats && seat && seat > 0) {
+  if (table === "MAIN") {
+    return "Main Table";
+  } else if (showSeats && seat && seat > 0) {
     return `Table ${table} · Seat ${seat}`;
   } else {
     return `Table ${table}`;
   }
 }
-
-// Improved CSV parsing function
-function parseCSV(csvText) {
-  const lines = csvText.split('\n');
-  const guests = [];
-  
-  // Start from row 1 (skip header row 0)
-  for (let i = 1; i < lines.length; i++) {
-    const line = lines[i].trim();
-    if (!line) continue; // Skip empty lines
-    
-    // Split by comma, but handle quoted fields
-    const cells = [];
-    let currentCell = '';
-    let insideQuotes = false;
-    
-    for (let j = 0; j < line.length; j++) {
-      const char = line[j];
-      
-      if (char === '"') {
-        insideQuotes = !insideQuotes;
-      } else if (char === ',' && !insideQuotes) {
-        cells.push(currentCell.trim());
-        currentCell = '';
-      } else {
-        currentCell += char;
-      }
-    }
-    cells.push(currentCell.trim());
-    
-    // Ensure we have at least 4 columns
-    if (cells.length >= 4) {
-      const first = cells[0] || "";
-      const last = cells[1] || "";
-      const table = cells[2] ? parseInt(cells[2].trim()) : 0;
-      const seat = cells[3] ? parseInt(cells[3].trim()) : 0;
-      
-      guests.push({
-        first, last,
-        name: first + " " + last,
-        table: isNaN(table) ? 0 : table,
-        seat: isNaN(seat) ? 0 : seat,
-        normalized: normalize(first + last)
-      });
-    }
-  }
-  
-  return guests;
-}
-
-// Fetch CSV with improved parsing
-fetch(CSV_URL)
-  .then(r => r.text())
-  .then(text => {
-    guests = parseCSV(text);
-    console.log(`Loaded ${guests.length} guests`);
-    if (guests.length > 0) {
-      console.log("Sample guest data:", guests[0]);
-      console.log("First few guests:", guests.slice(0, 3));
-    } else {
-      console.log("No guests loaded from CSV. Using fallback data.");
-      // Fallback sample data for testing
-      guests = [
-        { name: "John Smith", table: 5, seat: 3, normalized: "johnsmith" },
-        { name: "Emma Johnson", table: 2, seat: 7, normalized: "emmajohnson" },
-        { name: "Michael Brown", table: 8, seat: 1, normalized: "michaelbrown" },
-        { name: "Sarah Williams", table: 3, seat: 5, normalized: "sarahwilliams" },
-        { name: "David Miller", table: 6, seat: 2, normalized: "davidmiller" },
-        { name: "Lisa Davis", table: 1, seat: 4, normalized: "lisadavis" },
-        { name: "Robert Wilson", table: 10, seat: 6, normalized: "robertwilson" },
-        { name: "Maria Garcia", table: 4, seat: 8, normalized: "mariagarcia" },
-        { name: "James Martinez", table: 7, seat: 9, normalized: "jamesmartinez" },
-        { name: "Jennifer Taylor", table: 9, seat: 2, normalized: "jennifertaylor" }
-      ];
-    }
-  })
-  .catch(err => {
-    console.error("Error loading guest data:", err);
-    // Fallback sample data for testing
-    guests = [
-      { name: "John Smith", table: 5, seat: 3, normalized: "johnsmith" },
-      { name: "Emma Johnson", table: 2, seat: 7, normalized: "emmajohnson" },
-      { name: "Michael Brown", table: 8, seat: 1, normalized: "michaelbrown" },
-      { name: "Sarah Williams", table: 3, seat: 5, normalized: "sarahwilliams" },
-      { name: "David Miller", table: 6, seat: 2, normalized: "davidmiller" },
-      { name: "Lisa Davis", table: 1, seat: 4, normalized: "lisadavis" },
-      { name: "Robert Wilson", table: 10, seat: 6, normalized: "robertwilson" },
-      { name: "Maria Garcia", table: 4, seat: 8, normalized: "mariagarcia" },
-      { name: "James Martinez", table: 7, seat: 9, normalized: "jamesmartinez" },
-      { name: "Jennifer Taylor", table: 9, seat: 2, normalized: "jennifertaylor" }
-    ];
-  });
 
 // DOM references
 const input = document.getElementById("search");
@@ -736,6 +736,7 @@ const resultsDiv = document.getElementById("results");
 const popup = document.getElementById("popup");
 const overlay = document.getElementById("overlay");
 const closeBtn = document.getElementById("closePopup");
+const viewLayoutBtn = document.getElementById("viewLayout");
 const venueMap = document.getElementById("venueMap");
 const arrow = document.getElementById("arrow");
 
@@ -743,6 +744,7 @@ const arrow = document.getElementById("arrow");
 input.addEventListener("input", handleSearch);
 closeBtn.addEventListener("click", closePopup);
 overlay.addEventListener("click", closePopup);
+viewLayoutBtn.addEventListener("click", showFullLayout);
 
 // Close popup with ESC key
 document.addEventListener("keydown", (e) => {
@@ -775,7 +777,7 @@ function handleSearch() {
   matches.forEach(g => {
     const div = document.createElement("div");
     div.className = "result";
-    const seatText = showSeats ? formatSeatDisplay(g.table, g.seat) : `Table ${g.table}`;
+    const seatText = formatSeatDisplay(g.table, g.seat);
     div.innerHTML = `<div class="name">${g.name}</div><div class="seat">${seatText}</div>`;
     div.onclick = () => showPopup(g);
     resultsDiv.appendChild(div);
@@ -797,13 +799,15 @@ function showPopup(guest) {
   popup.classList.add("show");
   overlay.classList.add("show");
   
-  // Add petals effect
-  petals();
+  // Add garden elements effect
+  gardenElements();
 }
 
 function createDancingCouple() {
   const danceFloor = document.createElement("div");
   danceFloor.className = "dance-floor";
+  danceFloor.style.left = "270px";
+  danceFloor.style.top = "70px";
   
   // Background
   const bg = document.createElement("div");
@@ -848,15 +852,40 @@ function createDancingCouple() {
 function generateTableMap(selectedTable) {
   venueMap.innerHTML = "";
   
-  // Create tables
-  tableLayout.forEach(table => {
-    const tableEl = document.createElement("div");
-    tableEl.className = `table ${table.id === selectedTable ? 'highlighted' : ''}`;
-    tableEl.textContent = table.id;
-    tableEl.style.left = `${table.x}px`;
-    tableEl.style.top = `${table.y}px`;
-    tableEl.title = `Table ${table.id}`;
-    venueMap.appendChild(tableEl);
+  // Create tables and stage
+  tableLayout.forEach(item => {
+    if (item.type === "stage") {
+      const stageEl = document.createElement("div");
+      stageEl.className = "stage";
+      stageEl.textContent = item.label;
+      stageEl.style.left = `${item.x}px`;
+      stageEl.style.top = `${item.y}px`;
+      stageEl.style.width = `${item.width}px`;
+      stageEl.style.height = `${item.height}px`;
+      stageEl.title = item.label;
+      venueMap.appendChild(stageEl);
+    } else if (item.type === "main") {
+      const mainTableEl = document.createElement("div");
+      mainTableEl.className = `table ${item.id === selectedTable ? 'highlighted' : ''}`;
+      mainTableEl.textContent = "MAIN";
+      mainTableEl.style.left = `${item.x}px`;
+      mainTableEl.style.top = `${item.y}px`;
+      mainTableEl.style.width = `${item.width}px`;
+      mainTableEl.style.height = `${item.height}px`;
+      mainTableEl.style.borderRadius = "12px";
+      mainTableEl.style.backgroundColor = "#FFECB3";
+      mainTableEl.style.borderColor = "#FFB300";
+      mainTableEl.title = item.label;
+      venueMap.appendChild(mainTableEl);
+    } else {
+      const tableEl = document.createElement("div");
+      tableEl.className = `table ${item.id === selectedTable ? 'highlighted' : ''}`;
+      tableEl.textContent = item.id;
+      tableEl.style.left = `${item.x}px`;
+      tableEl.style.top = `${item.y}px`;
+      tableEl.title = `Table ${item.id}`;
+      venueMap.appendChild(tableEl);
+    }
   });
   
   // Add dancing couple floor
@@ -870,8 +899,8 @@ function positionArrow(selectedTable) {
   
   // Position arrow based on table location
   // Arrow appears above the table, pointing down
-  arrow.style.left = `${tableConfig.x + 25}px`;
-  arrow.style.top = `${tableConfig.y - 60}px`;
+  arrow.style.left = `${tableConfig.x + (tableConfig.width ? tableConfig.width/2 : 20)}px`;
+  arrow.style.top = `${tableConfig.y - 50}px`;
   
   // Make arrow visible
   arrow.style.display = "flex";
@@ -885,27 +914,38 @@ function closePopup() {
   input.focus();
 }
 
-// Petal animation
-function petals() {
-  for (let i = 0; i < 12; i++) {
+function showFullLayout() {
+  alert("Full layout of the Garden of Eden venue:\n\n" +
+        "• Stage at the front\n" +
+        "• Main table near the stage\n" +
+        "• 20 guest tables arranged in three rows\n" +
+        "• Dance floor in the center\n\n" +
+        "Refer to the interactive map for your specific table location.");
+}
+
+// Garden elements animation
+function gardenElements() {
+  for (let i = 0; i < 15; i++) {
     const p = document.createElement("div");
-    p.className = "petal";
-    // Mix of flower and heart emojis
-    const emojis = ["🌸", "💖", "🌺", "💕", "🌷", "✨"];
+    p.className = "garden-element";
+    // Garden-themed emojis
+    const emojis = ["🌸", "🌿", "🍃", "🌺", "🌼", "🌷", "🌻", "🌱", "🍂", "💐"];
     p.textContent = emojis[Math.floor(Math.random() * emojis.length)];
     p.style.left = Math.random() * 100 + "vw";
-    p.style.animationDuration = (2 + Math.random() * 2) + "s";
+    p.style.animationDuration = (3 + Math.random() * 3) + "s";
+    p.style.opacity = 0.7;
     document.body.appendChild(p);
-    setTimeout(() => p.remove(), 4000);
+    setTimeout(() => p.remove(), 6000);
   }
 }
 
 // Initial focus on input
 window.addEventListener("load", () => {
   input.focus();
+  // Add some initial garden elements
+  setTimeout(gardenElements, 1000);
 });
 </script>
 
 </body>
 </html>
-
