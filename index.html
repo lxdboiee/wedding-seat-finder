@@ -3,595 +3,155 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Garden of Eden Wedding - Seat Finder</title>
+<title>Wedding Seat Finder</title>
 <style>
-:root { 
-  --theme-color: #8BC34A; /* Garden green */
-  --accent-color: #FF9800; /* Warm orange accent */
-  --light-bg: #F9FFE8; /* Light garden background */
-  --dark-text: #2E3D1F; /* Deep green text */
-  --light-text: #6B7B5E; /* Muted green text */
-  --stage-color: #FFEB3B; /* Stage yellow */
-  --table-color: #C8E6C9; /* Light table color */
-}
+:root { --theme-color:#c084fc; }
 
 html, body {
-  margin: 0; 
-  padding: 0; 
-  height: 100%;
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  margin:0; padding:0; height:100%;
+  font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
 }
 
 body {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  min-height: 100vh;
-  overflow-x: hidden;
-  background: linear-gradient(rgba(255, 255, 255, 0.9), rgba(255, 255, 255, 0.9)),
-              radial-gradient(circle at 10% 20%, rgba(184, 233, 148, 0.2) 0%, rgba(113, 188, 120, 0.2) 90%);
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  min-height:100vh;
+  overflow:hidden;
+
+  /* Background image + semi-transparent overlay */
+  background: 
+    linear-gradient(rgba(255,255,255,0.85), rgba(255,255,255,0.85)),
+    url("background.png") no-repeat center center fixed;
   background-size: cover;
-  background-attachment: fixed;
 }
 
-.container {
-  width: 100%;
-  max-width: 600px;
-  text-align: center;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  padding: 20px;
+.container{
+  width:100%;
+  max-width:480px;
+  text-align:center;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
 }
 
-.card {
-  background: white;
-  border-radius: 22px;
-  padding: 36px 28px;
-  box-shadow: 0 20px 40px rgba(46, 61, 31, .15);
-  animation: fadeUp .8s ease forwards;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  width: 100%;
-  position: relative;
-  z-index: 1;
-  border: 2px solid var(--theme-color);
+.card{
+  background:white;
+  border-radius:22px;
+  padding:36px 28px;
+  box-shadow:0 20px 40px rgba(0,0,0,.15);
+  animation:fadeUp .8s ease forwards;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  width:100%;
 }
 
-@keyframes fadeUp {
-  from { opacity: 0; transform: translateY(20px) }
-  to { opacity: 1; transform: none }
+@keyframes fadeUp{
+  from{opacity:0; transform:translateY(20px)}
+  to{opacity:1; transform:none}
 }
 
-h1 {
-  font-size: 28px;
-  margin-bottom: 8px;
-  line-height: 1.4;
-  font-weight: 700;
-  text-align: center;
-  color: var(--dark-text);
-  text-shadow: 1px 1px 2px rgba(0,0,0,0.05);
+h1{
+  font-size:24px;
+  margin-bottom:8px;
+  line-height:1.3;
+  font-weight:600;
+  text-align:center;
 }
 
-.wedding-title {
-  background: linear-gradient(135deg, var(--theme-color), var(--accent-color));
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
+.subtitle{color:#555; margin-bottom:20px}
+
+input{
+  width:90%;
+  max-width:350px;
+  padding:16px;
+  font-size:18px;
+  border-radius:14px;
+  border:1px solid #ddd;
+  text-align:center;
+  margin-bottom:12px;
 }
 
-.subtitle {
-  color: var(--light-text);
-  margin-bottom: 24px;
-  font-size: 16px;
-  font-style: italic;
+input:focus{
+  outline:none;
+  border-color:var(--theme-color);
+  box-shadow:0 0 0 4px rgba(192,132,252,.25);
 }
 
-.input-container {
-  width: 100%;
-  margin-bottom: 16px;
-  position: relative;
+.results{
+  margin-top:18px;
+  display:flex;
+  flex-direction:column;
+  gap:10px;
+  width:100%;
 }
 
-input {
-  width: 100%;
-  max-width: 350px;
-  padding: 16px 20px;
-  font-size: 18px;
-  border-radius: 14px;
-  border: 2px solid #C8E6C9;
-  text-align: center;
-  transition: all 0.3s;
-  background-color: #F1F8E9;
-  color: var(--dark-text);
+.result{
+  background:#f9fafb;
+  border-radius:14px;
+  padding:14px;
+  cursor:pointer;
+  transition: all 0.2s;
 }
 
-input:focus {
-  outline: none;
-  border-color: var(--theme-color);
-  box-shadow: 0 0 0 4px rgba(139, 195, 74, .2);
-  background-color: white;
+.result:hover{
+  background:#e0d4f7;
 }
 
-.search-icon {
-  position: absolute;
-  right: 30px;
-  top: 50%;
-  transform: translateY(-50%);
-  color: var(--theme-color);
-  pointer-events: none;
-}
-
-.results {
-  margin-top: 20px;
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-  width: 100%;
-  max-height: 300px;
-  overflow-y: auto;
-  padding-right: 5px;
-}
-
-.result {
-  background: #F1F8E9;
-  border-radius: 14px;
-  padding: 16px;
-  cursor: pointer;
-  transition: all 0.3s;
-  border: 1px solid transparent;
-}
-
-.result:hover {
-  background: #E8F5E9;
-  border-color: var(--theme-color);
-  transform: translateY(-2px);
-  box-shadow: 0 5px 15px rgba(139, 195, 74, .2);
-}
-
-.name {
-  font-weight: 600;
-  font-size: 18px;
-  color: var(--dark-text);
-}
-
-.seat {
-  font-size: 16px;
-  font-weight: 600;
-  color: var(--accent-color);
-  margin-top: 6px;
+.name{font-weight:600}
+.seat{
+  font-size:20px;
+  font-weight:700;
+  color:#ff0000;
+  margin-top:4px;
 }
 
 /* POPUP */
-.popup {
-  position: fixed;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%) scale(0.7);
-  opacity: 0;
-  background: white;
-  border-radius: 26px;
-  padding: 30px;
-  box-shadow: 0 25px 70px rgba(46, 61, 31, .25);
-  text-align: center;
-  z-index: 100;
-  transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  pointer-events: none;
-  max-width: 90%;
-  width: 500px;
-  overflow: hidden;
-  border: 3px solid var(--theme-color);
+.popup{
+  position:fixed;
+  top:50%; left:50%;
+  transform:translate(-50%,-50%) scale(.6);
+  opacity:0;
+  background:#fff5f7;
+  border-radius:26px;
+  padding:36px 30px;
+  box-shadow:0 25px 70px rgba(0,0,0,.25);
+  text-align:center;
+  z-index:20;
+  transition:.5s ease;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  pointer-events:none;
 }
 
-.popup.show {
-  transform: translate(-50%, -50%) scale(1);
-  opacity: 1;
-  pointer-events: auto;
+.popup.show{
+  transform:translate(-50%,-50%) scale(1);
+  opacity:1;
+  pointer-events:auto;
+  animation:glow 2s ease-in-out infinite;
 }
 
-.popup-header {
-  margin-bottom: 20px;
-  width: 100%;
+@keyframes glow{
+  0%{box-shadow:0 0 0 rgba(255,120,160,.4)}
+  50%{box-shadow:0 0 30px rgba(255,120,160,.6)}
+  100%{box-shadow:0 0 0 rgba(255,120,160,.4)}
 }
 
-.popup-title {
-  font-size: 24px;
-  font-weight: 700;
-  color: var(--dark-text);
-  margin-bottom: 8px;
-  line-height: 1.3;
+/* PETALS */
+.petal{
+  position:fixed;
+  top:-40px;
+  font-size:22px;
+  animation:fall linear forwards;
+  pointer-events:none;
+  z-index:10;
 }
 
-.popup-subtitle {
-  font-size: 16px;
-  color: var(--light-text);
-  margin-bottom: 16px;
-  line-height: 1.5;
-  font-style: italic;
-}
-
-.popup-content {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  width: 100%;
-  margin-bottom: 24px;
-}
-
-.seat-info {
-  background: linear-gradient(135deg, #F1F8E9, #FFF8E1);
-  border-radius: 16px;
-  padding: 24px 20px;
-  margin-bottom: 24px;
-  width: 100%;
-  border: 2px solid var(--theme-color);
-}
-
-.seat-name {
-  font-size: 22px;
-  font-weight: 700;
-  color: var(--dark-text);
-  margin-bottom: 8px;
-}
-
-.seat-details {
-  font-size: 28px;
-  font-weight: 800;
-  color: var(--accent-color);
-  margin-bottom: 0;
-}
-
-.map-container {
-  position: relative;
-  width: 400px;
-  height: 280px;
-  margin: 0 auto;
-  background: #F9FFE8;
-  border-radius: 16px;
-  border: 3px solid var(--theme-color);
-  overflow: hidden;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-
-.venue-map {
-  width: 100%;
-  height: 100%;
-  position: relative;
-}
-
-.stage {
-  position: absolute;
-  width: 140px;
-  height: 60px;
-  background: var(--stage-color);
-  border-radius: 10px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  font-weight: 600;
-  color: #333;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
-  border: 2px solid #FFC107;
-  font-size: 12px;
-  text-align: center;
-  padding: 5px;
-}
-
-.table {
-  position: absolute;
-  width: 40px;
-  height: 40px;
-  background: var(--table-color);
-  border-radius: 50%;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  font-weight: 600;
-  color: var(--dark-text);
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-  transition: all 0.3s;
-  cursor: default;
-  border: 2px solid #A5D6A7;
-}
-
-.table.highlighted {
-  background: var(--theme-color);
-  color: white;
-  animation: pulse 2s infinite;
-  box-shadow: 0 0 0 8px rgba(139, 195, 74, 0.3);
-  z-index: 2;
-  border: 2px solid white;
-}
-
-@keyframes pulse {
-  0% { box-shadow: 0 0 0 0 rgba(139, 195, 74, 0.5); }
-  70% { box-shadow: 0 0 0 15px rgba(139, 195, 74, 0); }
-  100% { box-shadow: 0 0 0 0 rgba(139, 195, 74, 0); }
-}
-
-.arrow {
-  position: absolute;
-  width: 60px;
-  height: 40px;
-  z-index: 3;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  animation: bounce 1.5s infinite;
-}
-
-.arrow-line {
-  width: 2px;
-  height: 30px;
-  background: var(--accent-color);
-}
-
-.arrow-head {
-  width: 0;
-  height: 0;
-  border-left: 8px solid transparent;
-  border-right: 8px solid transparent;
-  border-top: 12px solid var(--accent-color);
-}
-
-@keyframes bounce {
-  0%, 100% { transform: translateY(0); }
-  50% { transform: translateY(-10px); }
-}
-
-.dance-floor {
-  position: absolute;
-  width: 80px;
-  height: 80px;
-  border-radius: 50%;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  box-shadow: 0 4px 10px rgba(0,0,0,0.1);
-  overflow: hidden;
-}
-
-.dance-floor-bg {
-  position: absolute;
-  width: 100%;
-  height: 100%;
-  background: linear-gradient(135deg, #FFECB3, #FFD54F);
-  border-radius: 50%;
-  z-index: 1;
-}
-
-.dance-floor-label {
-  position: absolute;
-  bottom: 5px;
-  color: #333;
-  font-size: 10px;
-  font-weight: 600;
-  z-index: 4;
-  text-shadow: 0 1px 2px rgba(0,0,0,0.2);
-}
-
-.dancing-couple {
-  position: relative;
-  width: 60px;
-  height: 60px;
-  z-index: 2;
-}
-
-.dancer {
-  position: absolute;
-  font-size: 24px;
-  animation-duration: 1.5s;
-  animation-iteration-count: infinite;
-  animation-timing-function: ease-in-out;
-}
-
-.dancer-female {
-  left: 10px;
-  animation-name: dance-female;
-  z-index: 3;
-}
-
-.dancer-male {
-  right: 10px;
-  animation-name: dance-male;
-  z-index: 2;
-}
-
-@keyframes dance-female {
-  0%, 100% { 
-    transform: translateY(0) rotate(0deg); 
-  }
-  25% { 
-    transform: translateY(-10px) rotate(-10deg); 
-  }
-  50% { 
-    transform: translateY(-5px) rotate(5deg); 
-  }
-  75% { 
-    transform: translateY(-8px) rotate(8deg); 
-  }
-}
-
-@keyframes dance-male {
-  0%, 100% { 
-    transform: translateY(0) rotate(0deg); 
-  }
-  25% { 
-    transform: translateY(-8px) rotate(10deg); 
-  }
-  50% { 
-    transform: translateY(-3px) rotate(-5deg); 
-  }
-  75% { 
-    transform: translateY(-6px) rotate(-8deg); 
-  }
-}
-
-.dance-sparkle {
-  position: absolute;
-  font-size: 12px;
-  opacity: 0;
-  animation: sparkle 2s infinite;
-}
-
-.dance-sparkle:nth-child(1) {
-  top: 5px;
-  left: 20px;
-  animation-delay: 0s;
-}
-
-.dance-sparkle:nth-child(2) {
-  top: 20px;
-  right: 5px;
-  animation-delay: 0.5s;
-}
-
-.dance-sparkle:nth-child(3) {
-  bottom: 10px;
-  left: 10px;
-  animation-delay: 1s;
-}
-
-.dance-sparkle:nth-child(4) {
-  bottom: 5px;
-  right: 15px;
-  animation-delay: 1.5s;
-}
-
-@keyframes sparkle {
-  0%, 100% { opacity: 0; transform: scale(0.5); }
-  50% { opacity: 1; transform: scale(1); }
-}
-
-.close-btn {
-  background: var(--theme-color);
-  color: white;
-  border: none;
-  border-radius: 12px;
-  padding: 12px 24px;
-  font-size: 16px;
-  font-weight: 600;
-  cursor: pointer;
-  transition: all 0.3s;
-  margin-top: 10px;
-}
-
-.close-btn:hover {
-  background: #689F38;
-  transform: translateY(-2px);
-  box-shadow: 0 5px 15px rgba(139, 195, 74, 0.4);
-}
-
-.overlay {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background: rgba(46, 61, 31, 0.7);
-  z-index: 99;
-  opacity: 0;
-  pointer-events: none;
-  transition: opacity 0.4s;
-}
-
-.overlay.show {
-  opacity: 1;
-  pointer-events: auto;
-}
-
-/* GARDEN ELEMENTS */
-.garden-element {
-  position: fixed;
-  font-size: 24px;
-  animation: float linear forwards;
-  pointer-events: none;
-  z-index: 10;
-}
-
-@keyframes float {
-  to { transform: translateY(110vh) rotate(360deg); opacity: 0 }
-}
-
-/* Buttons for navigation */
-.nav-buttons {
-  display: flex;
-  gap: 10px;
-  margin-top: 20px;
-}
-
-.nav-btn {
-  background: var(--table-color);
-  color: var(--dark-text);
-  border: 2px solid var(--theme-color);
-  border-radius: 12px;
-  padding: 10px 20px;
-  font-size: 14px;
-  font-weight: 600;
-  cursor: pointer;
-  transition: all 0.3s;
-}
-
-.nav-btn:hover {
-  background: var(--theme-color);
-  color: white;
-  transform: translateY(-2px);
-}
-
-/* Scrollbar styling */
-::-webkit-scrollbar {
-  width: 8px;
-}
-
-::-webkit-scrollbar-track {
-  background: #F1F8E9;
-  border-radius: 10px;
-}
-
-::-webkit-scrollbar-thumb {
-  background: var(--theme-color);
-  border-radius: 10px;
-}
-
-::-webkit-scrollbar-thumb:hover {
-  background: #689F38;
-}
-
-/* Responsive adjustments */
-@media (max-width: 600px) {
-  .card {
-    padding: 28px 20px;
-  }
-  
-  .popup {
-    width: 90%;
-    padding: 24px 20px;
-  }
-  
-  .map-container {
-    width: 320px;
-    height: 220px;
-  }
-  
-  .popup-title {
-    font-size: 22px;
-  }
-  
-  .seat-details {
-    font-size: 24px;
-  }
-  
-  h1 {
-    font-size: 24px;
-  }
+@keyframes fall{
+  to{transform:translateY(110vh) rotate(360deg);opacity:0}
 }
 </style>
 </head>
@@ -601,165 +161,62 @@ input:focus {
 <div class="container">
   <div class="card">
     <h1 id="title"></h1>
-    <div class="subtitle">Find your table in the Garden of Eden</div>
-    <div class="input-container">
-      <input id="search" placeholder="Start typing your name">
-      <div class="search-icon">🔍</div>
-    </div>
+    <div class="subtitle">Find your Table</div>
+    <input id="search" placeholder="Start typing your name">
     <div id="results" class="results"></div>
   </div>
 </div>
 
 <div id="popup" class="popup">
-  <div class="popup-header">
-    <div class="popup-title">Welcome to the Garden of Eden</div>
-    <div class="popup-subtitle">We're delighted to have you with us today 🌿</div>
-  </div>
-  
-  <div class="popup-content">
-    <div class="seat-info">
-      <div class="seat-name" id="pName"></div>
-      <div class="seat-details" id="pSeat"></div>
-    </div>
-    
-    <div class="map-container">
-      <div class="venue-map" id="venueMap">
-        <!-- Tables will be generated here -->
-      </div>
-      <div class="arrow" id="arrow">
-        <div class="arrow-line"></div>
-        <div class="arrow-head"></div>
-      </div>
-    </div>
-  </div>
-  
-  <div class="nav-buttons">
-    <button class="nav-btn" id="viewLayout">View Full Layout</button>
-    <button class="close-btn" id="closePopup">Find My Table</button>
-  </div>
+  <div class="name" id="pName"></div>
+  <div class="seat" id="pSeat"></div>
 </div>
 
-<div id="overlay" class="overlay"></div>
-
 <script>
-// CONFIGURATION
-const showSeats = true; // Change to false to hide seat numbers
-
 // Couple info
-const couple = { first: "Jennifer", second: "Charlie", date: "26 Sept 2026" };
+const couple = { first:"Jennifer", second:"Charlie", date:"26 Sept 2026" };
 // Multi-line title
 document.getElementById("title").innerHTML = `
-  <div class="wedding-title">Garden of Eden Wedding</div>
-  <div>${couple.first} & ${couple.second}</div>
-  <div style="font-size: 18px; color: var(--light-text); margin-top: 5px;">26 September 2026</div>
+  <div>Welcome to </div>
+  <div>${couple.first} & ${couple.second}'s</div>
+  <div>Wedding on ${couple.date}</div>
 `;
 
-// Updated table layout based on the PDF
-const tableLayout = [
-  // Stage area
-  { id: "STAGE", x: 200, y: 30, width: 140, height: 60, type: "stage", label: "Band/DJ Stage" },
-  
-  // Top row from PDF: 17, 13, 7, 5, 10, 16
-  { id: 17, x: 20, y: 110 },
-  { id: 13, x: 80, y: 110 },
-  { id: 7, x: 140, y: 110 },
-  { id: 5, x: 200, y: 110 },
-  { id: 10, x: 260, y: 110 },
-  { id: 16, x: 320, y: 110 },
-  
-  // Middle row from PDF: 19, 15, 9, 1, 2, 6, 12, 18
-  { id: 19, x: 20, y: 170 },
-  { id: 15, x: 80, y: 170 },
-  { id: 9, x: 140, y: 170 },
-  { id: 1, x: 200, y: 170 },
-  { id: 2, x: 260, y: 170 },
-  { id: 6, x: 320, y: 170 },
-  { id: 12, x: 380, y: 170 },
-  { id: 18, x: 440, y: 170 },
-  
-  // Bottom row from PDF: 11, 3, 4, 8, 14, 20
-  { id: 11, x: 50, y: 230 },
-  { id: 3, x: 110, y: 230 },
-  { id: 4, x: 170, y: 230 },
-  { id: 8, x: 230, y: 230 },
-  { id: 14, x: 290, y: 230 },
-  { id: 20, x: 350, y: 230 },
-  
-  // Main table (from PDF: "MAN TABLE" likely meaning "Main Table")
-  { id: "MAIN", x: 380, y: 30, width: 100, height: 50, type: "main", label: "Main Table" },
-];
+// CSV source
+const CSV_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vRTHOySmu1LqBL9y25rwBHDflfv4TOwbmgUB8oJkxfMqQuSs9iEeYz29KoRQNyQYEcAoqZ2EPtPR7D3/pub?gid=0&single=true&output=csv";
 
-// Sample guest data with tables matching the layout
-let guests = [
-  { name: "John Smith", table: 5, seat: 3, normalized: "johnsmith" },
-  { name: "Emma Johnson", table: 2, seat: 7, normalized: "emmajohnson" },
-  { name: "Michael Brown", table: 8, seat: 1, normalized: "michaelbrown" },
-  { name: "Sarah Williams", table: 3, seat: 5, normalized: "sarahwilliams" },
-  { name: "David Miller", table: 6, seat: 2, normalized: "davidmiller" },
-  { name: "Lisa Davis", table: 1, seat: 4, normalized: "lisadavis" },
-  { name: "Robert Wilson", table: 10, seat: 6, normalized: "robertwilson" },
-  { name: "Maria Garcia", table: 4, seat: 8, normalized: "mariagarcia" },
-  { name: "James Martinez", table: 7, seat: 9, normalized: "jamesmartinez" },
-  { name: "Jennifer Taylor", table: 9, seat: 2, normalized: "jennifertaylor" },
-  { name: "Thomas Anderson", table: 11, seat: 1, normalized: "thomasanderson" },
-  { name: "Olivia Clark", table: 12, seat: 3, normalized: "oliviaclark" },
-  { name: "William Lewis", table: 13, seat: 5, normalized: "williamlewis" },
-  { name: "Sophia Walker", table: 14, seat: 2, normalized: "sophiawalker" },
-  { name: "Daniel Hall", table: 15, seat: 4, normalized: "danielhall" },
-  { name: "Isabella Allen", table: 16, seat: 6, normalized: "isabellaallen" },
-  { name: "Matthew Young", table: 17, seat: 1, normalized: "matthewyoung" },
-  { name: "Charlotte King", table: 18, seat: 3, normalized: "charlotteking" },
-  { name: "Christopher Wright", table: 19, seat: 5, normalized: "christopherwright" },
-  { name: "Amelia Scott", table: 20, seat: 2, normalized: "ameliascott" },
-  { name: "Jennifer Bride", table: "MAIN", seat: 1, normalized: "jenniferbride" },
-  { name: "Charlie Groom", table: "MAIN", seat: 2, normalized: "charliegroom" },
-  { name: "Parents", table: "MAIN", seat: 3, normalized: "parents" }
-];
+let guests=[];
 
 // Normalize text: lowercase & remove spaces
-const normalize = s => s.toLowerCase().replace(/\s+/g, "");
+const normalize = s => s.toLowerCase().replace(/\s+/g,"");
 
-// Function to format seat display
-function formatSeatDisplay(table, seat) {
-  if (table === "MAIN") {
-    return "Main Table";
-  } else if (showSeats && seat && seat > 0) {
-    return `Table ${table} · Seat ${seat}`;
-  } else {
-    return `Table ${table}`;
-  }
-}
+// Fetch CSV
+fetch(CSV_URL)
+  .then(r => r.text())
+  .then(text => {
+    const rows = text.trim().split("\n").slice(1);
+    guests = rows.map(r=>{
+      const [first,last,table,seat] = r.split(",");
+      return {
+        first, last,
+        name: first + " " + last,
+        table, seat,
+        normalized: normalize(first + last)
+      };
+    });
+  });
 
 // DOM references
 const input = document.getElementById("search");
 const resultsDiv = document.getElementById("results");
 const popup = document.getElementById("popup");
-const overlay = document.getElementById("overlay");
-const closeBtn = document.getElementById("closePopup");
-const viewLayoutBtn = document.getElementById("viewLayout");
-const venueMap = document.getElementById("venueMap");
-const arrow = document.getElementById("arrow");
 
-// Event listeners
-input.addEventListener("input", handleSearch);
-closeBtn.addEventListener("click", closePopup);
-overlay.addEventListener("click", closePopup);
-viewLayoutBtn.addEventListener("click", showFullLayout);
-
-// Close popup with ESC key
-document.addEventListener("keydown", (e) => {
-  if (e.key === "Escape" && popup.classList.contains("show")) {
-    closePopup();
-  }
-});
-
-function handleSearch() {
+input.addEventListener("input", () => {
   const query = input.value.toLowerCase().trim();
   resultsDiv.innerHTML = "";
   popup.classList.remove("show");
-  overlay.classList.remove("show");
 
-  if (!query) return;
+  if(!query) return;
 
   // split query by spaces for partial matching
   const queryParts = query.split(/\s+/).map(normalize);
@@ -769,182 +226,39 @@ function handleSearch() {
     queryParts.every(p => g.normalized.includes(p))
   );
 
-  if (matches.length === 1) {
+  if(matches.length===1){
     showPopup(matches[0]);
     return;
   }
 
-  matches.forEach(g => {
+  matches.forEach(g=>{
     const div = document.createElement("div");
     div.className = "result";
-    const seatText = formatSeatDisplay(g.table, g.seat);
-    div.innerHTML = `<div class="name">${g.name}</div><div class="seat">${seatText}</div>`;
+    div.innerHTML = `<div class="name">${g.name}</div><div class="seat">Table ${g.table} · Seat ${g.seat}</div>`;
     div.onclick = () => showPopup(g);
     resultsDiv.appendChild(div);
   });
-}
-
-function showPopup(guest) {
-  // Update guest info
-  document.getElementById("pName").textContent = guest.name;
-  document.getElementById("pSeat").textContent = formatSeatDisplay(guest.table, guest.seat);
-  
-  // Generate table map
-  generateTableMap(guest.table);
-  
-  // Position arrow pointing to the table
-  positionArrow(guest.table);
-  
-  // Show popup and overlay
-  popup.classList.add("show");
-  overlay.classList.add("show");
-  
-  // Add garden elements effect
-  gardenElements();
-}
-
-function createDancingCouple() {
-  const danceFloor = document.createElement("div");
-  danceFloor.className = "dance-floor";
-  danceFloor.style.left = "270px";
-  danceFloor.style.top = "70px";
-  
-  // Background
-  const bg = document.createElement("div");
-  bg.className = "dance-floor-bg";
-  danceFloor.appendChild(bg);
-  
-  // Dancing couple container
-  const coupleContainer = document.createElement("div");
-  coupleContainer.className = "dancing-couple";
-  
-  // Female dancer
-  const femaleDancer = document.createElement("div");
-  femaleDancer.className = "dancer dancer-female";
-  femaleDancer.textContent = "💃";
-  coupleContainer.appendChild(femaleDancer);
-  
-  // Male dancer
-  const maleDancer = document.createElement("div");
-  maleDancer.className = "dancer dancer-male";
-  maleDancer.textContent = "🕺";
-  coupleContainer.appendChild(maleDancer);
-  
-  // Sparkles
-  for (let i = 0; i < 4; i++) {
-    const sparkle = document.createElement("div");
-    sparkle.className = "dance-sparkle";
-    sparkle.textContent = "✨";
-    coupleContainer.appendChild(sparkle);
-  }
-  
-  danceFloor.appendChild(coupleContainer);
-  
-  // Label
-  const label = document.createElement("div");
-  label.className = "dance-floor-label";
-  label.textContent = "Dance Floor";
-  danceFloor.appendChild(label);
-  
-  return danceFloor;
-}
-
-function generateTableMap(selectedTable) {
-  venueMap.innerHTML = "";
-  
-  // Create tables and stage
-  tableLayout.forEach(item => {
-    if (item.type === "stage") {
-      const stageEl = document.createElement("div");
-      stageEl.className = "stage";
-      stageEl.textContent = item.label;
-      stageEl.style.left = `${item.x}px`;
-      stageEl.style.top = `${item.y}px`;
-      stageEl.style.width = `${item.width}px`;
-      stageEl.style.height = `${item.height}px`;
-      stageEl.title = item.label;
-      venueMap.appendChild(stageEl);
-    } else if (item.type === "main") {
-      const mainTableEl = document.createElement("div");
-      mainTableEl.className = `table ${item.id === selectedTable ? 'highlighted' : ''}`;
-      mainTableEl.textContent = "MAIN";
-      mainTableEl.style.left = `${item.x}px`;
-      mainTableEl.style.top = `${item.y}px`;
-      mainTableEl.style.width = `${item.width}px`;
-      mainTableEl.style.height = `${item.height}px`;
-      mainTableEl.style.borderRadius = "12px";
-      mainTableEl.style.backgroundColor = "#FFECB3";
-      mainTableEl.style.borderColor = "#FFB300";
-      mainTableEl.title = item.label;
-      venueMap.appendChild(mainTableEl);
-    } else {
-      const tableEl = document.createElement("div");
-      tableEl.className = `table ${item.id === selectedTable ? 'highlighted' : ''}`;
-      tableEl.textContent = item.id;
-      tableEl.style.left = `${item.x}px`;
-      tableEl.style.top = `${item.y}px`;
-      tableEl.title = `Table ${item.id}`;
-      venueMap.appendChild(tableEl);
-    }
-  });
-  
-  // Add dancing couple floor
-  const danceFloor = createDancingCouple();
-  venueMap.appendChild(danceFloor);
-}
-
-function positionArrow(selectedTable) {
-  const tableConfig = tableLayout.find(t => t.id === selectedTable);
-  if (!tableConfig) return;
-  
-  // Position arrow based on table location
-  // Arrow appears above the table, pointing down
-  arrow.style.left = `${tableConfig.x + (tableConfig.width ? tableConfig.width/2 : 20)}px`;
-  arrow.style.top = `${tableConfig.y - 50}px`;
-  
-  // Make arrow visible
-  arrow.style.display = "flex";
-}
-
-function closePopup() {
-  popup.classList.remove("show");
-  overlay.classList.remove("show");
-  input.value = "";
-  resultsDiv.innerHTML = "";
-  input.focus();
-}
-
-function showFullLayout() {
-  alert("Full layout of the Garden of Eden venue:\n\n" +
-        "• Stage at the front\n" +
-        "• Main table near the stage\n" +
-        "• 20 guest tables arranged in three rows\n" +
-        "• Dance floor in the center\n\n" +
-        "Refer to the interactive map for your specific table location.");
-}
-
-// Garden elements animation
-function gardenElements() {
-  for (let i = 0; i < 15; i++) {
-    const p = document.createElement("div");
-    p.className = "garden-element";
-    // Garden-themed emojis
-    const emojis = ["🌸", "🌿", "🍃", "🌺", "🌼", "🌷", "🌻", "🌱", "🍂", "💐"];
-    p.textContent = emojis[Math.floor(Math.random() * emojis.length)];
-    p.style.left = Math.random() * 100 + "vw";
-    p.style.animationDuration = (3 + Math.random() * 3) + "s";
-    p.style.opacity = 0.7;
-    document.body.appendChild(p);
-    setTimeout(() => p.remove(), 6000);
-  }
-}
-
-// Initial focus on input
-window.addEventListener("load", () => {
-  input.focus();
-  // Add some initial garden elements
-  setTimeout(gardenElements, 1000);
 });
+
+function showPopup(g){
+  popup.querySelector("#pName").textContent = g.name;
+  popup.querySelector("#pSeat").textContent = `Table ${g.table} · Seat ${g.seat}`;
+  popup.classList.add("show");
+  petals();
+}
+
+// Petal animation
+function petals(){
+  for(let i=0;i<16;i++){
+    const p = document.createElement("div");
+    p.className="petal";
+    p.textContent="🌸";
+    p.style.left = Math.random()*100 + "vw";
+    p.style.animationDuration = (2+Math.random()*2) + "s";
+    document.body.appendChild(p);
+    setTimeout(()=>p.remove(),4000);
+  }
+}
 </script>
 
 </body>
